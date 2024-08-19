@@ -7,15 +7,15 @@ import { useNavigate } from 'react-router-dom';
 
 const DIGIMON_SHEET_ID = '1OUe7UXkv4thBKIpJu0E3d7fCVj3qUwxBuAZxKJ45nFk';
 const decks = [
-  { name: 'Blue Hybrid', guid: 423063197 },
-  { name: 'DexDorugoramon', guid: 2141440214 },
-  { name: 'Red Hybrid', guid: 1676514637 },
-  { name: 'DigiPolice', guid: 989741694 },
-  { name: 'Shinegreymon', guid: 147658920 },
-  { name: 'Phoenixmon', guid: 1539851034 },
-  { name: 'Eosmon', guid: 538505515 },
-  { name: 'Omnimon', guid: 1397861951 },
-  { name: 'Leviamon', guid: 2017365004 },
+  { name: 'Blue Hybrid', guid: '423063197' },
+  { name: 'DexDorugoramon', guid: '2141440214' },
+  { name: 'Red Hybrid', guid: '1676514637' },
+  { name: 'DigiPolice', guid: '989741694' },
+  { name: 'Shinegreymon', guid: '147658920' },
+  { name: 'Phoenixmon', guid: '1539851034' },
+  { name: 'Eosmon', guid: '538505515' },
+  { name: 'Omnimon', guid: '1397861951' },
+  { name: 'Leviamon', guid: '2017365004' },
 ];
 
 const getDigimonDeckUrl = (guid) => {
@@ -29,6 +29,8 @@ const Digimon = ({ location }) => {
   const [selectedDeck, setSelectedDeck] = useState(null);
   const [view, setView] = useState('full'); // Default view
   const navigate = useNavigate(); // Initialize useNavigate
+  const [selectedCard, setSelectedCard] = useState(null); // State to track the selected card
+
 
   // Read query parameters
   useEffect(() => {
@@ -42,7 +44,7 @@ const Digimon = ({ location }) => {
     }
 
     if (guidParam) {
-      const selectedDeck = decks.find(deck => deck.guid === parseInt(guidParam));
+      const selectedDeck = decks.find(deck => deck.guid === guidParam);
       if (selectedDeck) {
         setSelectedDeck(selectedDeck);
       } else {
@@ -102,7 +104,6 @@ const Digimon = ({ location }) => {
     } else {
       setError('No matching deck found');
       setLoading(false);
-      setSelectedDeck(null)
     }
   }, [selectedDeck]);
 
@@ -116,7 +117,7 @@ const Digimon = ({ location }) => {
   };
 
   return (
-    <div>
+    <div className="digimon">
       <DeckSelector onSelectDeck={handleSelectDeck} />
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
@@ -127,6 +128,7 @@ const Digimon = ({ location }) => {
             <button onClick={() => handleViewChange('full')} className={view === 'full' ? 'active' : ''}>Full</button>
             <button onClick={() => handleViewChange('mid')} className={view === 'mid' ? 'active' : ''}>Mid</button>
             <button onClick={() => handleViewChange('list')} className={view === 'list' ? 'active' : ''}>List</button>
+            <button onClick={() => handleViewChange('stack')} className={view === 'stack' ? 'active' : ''}>Stack</button> {/* New Stack View */}
           </div>
           <div className={`digimon-container ${view}`}>
             {view === 'full' && data.map((card, index) => {
@@ -144,7 +146,10 @@ const Digimon = ({ location }) => {
                         src={card['Image']}
                         alt={card['Card Name']}
                         className="card-image"
-                        style={{ marginTop: `${i > 0 ? -200 : 0}px`, zIndex: inDeckCount - i }}
+                        style={{ 
+                          marginTop: `${i > 0 ? -200 : 0}px`, 
+                          zIndex: i,
+                        }}
                       />
                     ))}
                   </div>
@@ -180,6 +185,24 @@ const Digimon = ({ location }) => {
                 </div>
               );
             })}
+            {view === 'stack' && (
+              <>
+                <div className="stack-container">
+                  {data.map((card, index) => (
+                    [...Array(parseInt(card['In Deck'], 10) || 0)].map((_, i) => (
+                      <div key={`${card['Card Name']}-${i}`} className="stack-card">
+                        <img src={card['Image']} alt={card['Card Name']} onClick={() => setSelectedCard(card)} className="stack-card-image" />
+                      </div>
+                    ))
+                  ))}
+                </div>
+                <div className="selected-card">
+                  {selectedCard && (
+                    <img src={selectedCard['Image']} alt={selectedCard['Card Name']} className="large-card-image" />
+                  )}
+                </div>
+              </>
+            )}
           </div>
         </>
       )}
