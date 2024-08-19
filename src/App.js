@@ -1,23 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import './styles/App.css';
+import Password from './components/Password';
+import Home from './components/Home';
+import Digimon from './components/Digimon';
+import { isLoggedIn, logout } from './services/auth';
 
 function App() {
+  const [isLoggedInState, setIsLoggedInState] = useState(false);
+
+  useEffect(() => {
+    if (isLoggedIn()) {
+      setIsLoggedInState(true);
+    } else {
+      logout();
+    }
+  }, []);
+
+  const handleLogin = () => {
+    setIsLoggedInState(true);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {isLoggedInState ? (
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/digimon" element={<Digimon />} />
+          {/* Add other routes here */}
+        </Routes>
+      ) : (
+        <Password onLogin={handleLogin} />
+      )}
     </div>
   );
 }

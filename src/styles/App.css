@@ -1,3 +1,7 @@
+body {
+  background-color: darkslategrey;
+}
+
 .App {
   text-align: center;
 }
@@ -32,7 +36,22 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+.password-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #282c34;
+  color: white;
+}
+
+.error {
+  color: red;
 }
