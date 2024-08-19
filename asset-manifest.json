@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/djaunt-tcg/static/css/main.b77f513c.css",
-    "main.js": "/djaunt-tcg/static/js/main.c0baa7d0.js",
+    "main.js": "/djaunt-tcg/static/js/main.3cee5cfa.js",
     "static/js/453.f049ec3b.chunk.js": "/djaunt-tcg/static/js/453.f049ec3b.chunk.js",
     "index.html": "/djaunt-tcg/index.html",
     "main.b77f513c.css.map": "/djaunt-tcg/static/css/main.b77f513c.css.map",
-    "main.c0baa7d0.js.map": "/djaunt-tcg/static/js/main.c0baa7d0.js.map",
+    "main.3cee5cfa.js.map": "/djaunt-tcg/static/js/main.3cee5cfa.js.map",
     "453.f049ec3b.chunk.js.map": "/djaunt-tcg/static/js/453.f049ec3b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.b77f513c.css",
-    "static/js/main.c0baa7d0.js"
+    "static/js/main.3cee5cfa.js"
   ]
 }
