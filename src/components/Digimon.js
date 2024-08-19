@@ -4,6 +4,7 @@ import Papa from 'papaparse';
 import DeckSelector from './DeckSelector';
 import '../styles/Digimon.css';
 import { useNavigate } from 'react-router-dom';
+import Carousel from './Carousel';
 
 const DIGIMON_SHEET_ID = '1OUe7UXkv4thBKIpJu0E3d7fCVj3qUwxBuAZxKJ45nFk';
 const decks = [
@@ -30,7 +31,33 @@ const Digimon = ({ location }) => {
   const [view, setView] = useState('full'); // Default view
   const navigate = useNavigate(); // Initialize useNavigate
   const [selectedCard, setSelectedCard] = useState(null); // State to track the selected card
+  const [drawnImages, setDrawnImages] = useState([]);
 
+  const handleCardClick = (card) => () => {
+    setSelectedCard(card); // Set the selected card when clicked
+  };
+
+  const handleDraw = () => {
+    const randomImages = [];
+    const availableImages = getSpreadDeck().map(card => card['Image']);
+    
+    while (randomImages.length < 5) {
+      const randomIndex = Math.floor(Math.random() * availableImages.length);
+      const randomImage = availableImages[randomIndex];
+      if (!randomImages.includes(randomImage)) {
+        randomImages.push(randomImage);
+      }
+    }
+    
+    setDrawnImages(randomImages);
+  };
+
+  const getSpreadDeck = () => {
+    return data.flatMap(card => {
+      const inDeckCount = parseInt(card['In Deck'], 10) || 0;
+      return Array.from({ length: inDeckCount }, () => card);
+    });
+  };
 
   // Read query parameters
   useEffect(() => {
@@ -129,6 +156,7 @@ const Digimon = ({ location }) => {
             <button onClick={() => handleViewChange('mid')} className={view === 'mid' ? 'active' : ''}>Mid</button>
             <button onClick={() => handleViewChange('list')} className={view === 'list' ? 'active' : ''}>List</button>
             <button onClick={() => handleViewChange('stack')} className={view === 'stack' ? 'active' : ''}>Stack</button> {/* New Stack View */}
+            <button onClick={() => handleViewChange('carousel')} className={view === 'carousel' ? 'active' : ''}>Carousel</button>
           </div>
           <div className={`digimon-container ${view}`}>
             {view === 'full' && data.map((card, index) => {
@@ -177,31 +205,58 @@ const Digimon = ({ location }) => {
             })}
             {view === 'list' && data.map((card, index) => {
               const inDeckCount = parseInt(card['In Deck'], 10) || 0;
+              const setNameParts = card['Card Set'] ? card['Card Set'].split('-') : ['', ''];
+              const firstPart = setNameParts[0];
+              const secondPart = setNameParts[1] ? `${setNameParts[1]}` : '';
+
               return (
                 <div className="list-card" key={index}>
                   <div className="list-card-name">{card['Card Name']}</div>
-                  <div className="list-card-set">{card['Card Set']}</div>
-                  <div className="list-card-count">{card['Have']} / {inDeckCount}</div>
+                  <div className="vertical-line"></div>
+                  <div className="list-card-set">
+                    <span className="set-label">Set:</span> {firstPart}
+                  </div>
+                  <div className="vertical-line"></div>
+                  <div className="list-card-set-number">
+                    <span className="set-number-label">#:</span> {secondPart}
+                  </div>
+                  <div className="vertical-line"></div>
+                  <div className="list-card-count">
+                    <span className="have-label">Have:</span> {card['Have']} / <span className="in-deck-label">{inDeckCount}</span>
+                  </div>
                 </div>
               );
             })}
             {view === 'stack' && (
               <>
                 <div className="stack-container">
-                  {data.map((card, index) => (
-                    [...Array(parseInt(card['In Deck'], 10) || 0)].map((_, i) => (
-                      <div key={`${card['Card Name']}-${i}`} className="stack-card">
-                        <img src={card['Image']} alt={card['Card Name']} onClick={() => setSelectedCard(card)} className="stack-card-image" />
-                      </div>
-                    ))
+                  {getSpreadDeck().map((card, index) => (
+                    <div key={`${card['Card Name']}-${index}`} className="stack-card">
+                      <img src={card['Image']} alt={card['Card Name']} onClick={handleCardClick(card)} className="stack-card-image" />
+                    </div>
                   ))}
                 </div>
                 <div className="selected-card">
-                  {selectedCard && (
+                  {selectedCard ? (
                     <img src={selectedCard['Image']} alt={selectedCard['Card Name']} className="large-card-image" />
+                  ) : (
+                    <div className="select-card-placeholder">
+                      Select a card
+                    </div>
                   )}
                 </div>
               </>
+            )}
+            {view === 'carousel' && (
+              <div className="carousel-container">
+                <Carousel images={getSpreadDeck().map(card => card['Image'])} />
+                <div className="random-images">
+                  {drawnImages.map((image, index) => (
+                    <img key={index} src={image} alt={`Random ${index}`} className="random-image" />
+                  ))}
+                </div>
+                <button className="draw-button" onClick={handleDraw}>Draw</button>
+              </div>
             )}
           </div>
         </>

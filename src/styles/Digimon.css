@@ -21,7 +21,7 @@
 }
 
 .digimon-container.mid {
-  flex-direction: column;
+  flex-direction: row;
 }
 
 .digimon-container.list {
@@ -159,6 +159,7 @@
   display: flex;
   align-items: center;
   margin: 10px 0;
+  width: 200px;
 }
 
 .mid-card-image {
@@ -171,6 +172,27 @@
 .mid-card-details {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+}
+
+.mid-card-name {
+  font-weight: bold;
+  margin-top: 10px;
+  text-align: left;
+}
+
+.mid-card-set {
+  font-size: 0.8em;
+  color: #dcdcdc;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.mid-card-count {
+  font-size: 0.8em;
+  color: #dcdcdc;
+  font-style: italic;
+  opacity: 0.7;
 }
 
 /* ========================= */
@@ -178,12 +200,37 @@
 /* ========================= */
 .list-card {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   margin: 10px 0;
   padding: 10px;
-  background-color: #f9f9f9;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+
+.list-card-name,
+.list-card-set,
+.list-card-set-number,
+.list-card-count {
+  max-width: 100px;
+  /* Set max width for each field */
+  overflow: hidden;
+  /* Hide overflow */
+  text-overflow: ellipsis;
+  /* Add ellipsis for overflow text */
+  white-space: nowrap;
+  /* Prevent text wrapping */
+}
+
+.vertical-line {
+  width: 1px;
+  /* Width of the vertical line */
+  background-color: #ccc;
+  /* Color of the line */
+  height: 80%;
+  /* Height of the line */
+  margin: 0 10px;
+  /* Space around the line */
 }
 
 /* ========================= */
@@ -233,6 +280,17 @@
   padding: 10px;
 }
 
+.select-card-placeholder {
+  width: 100%;
+  height: 419px;
+  border: 2px dashed #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 16px;
+}
+
 .large-card-image {
   width: 100%;
   height: auto;
@@ -242,4 +300,91 @@
 .card-name {
   font-weight: bold;
   margin-top: 10px;
+}
+
+/* ========================= */
+/* Carousel Styles          */
+/* ========================= */
+.carousel-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  overflow: hidden;
+  /* Hide overflow */
+  position: relative;
+}
+
+.carousel {
+  display: flex;
+  overflow-x: auto;
+  /* Enable horizontal scrolling */
+  scroll-behavior: smooth;
+  /* Smooth scrolling */
+  width: 100%;
+  /* Full width */
+}
+
+.carousel-image {
+  width: 100px;
+  /* Adjust as needed */
+  height: auto;
+  margin: 0 10px;
+  /* Space between images */
+}
+
+.left-edge,
+.right-edge {
+  width: 50px;
+  /* Width of the hover area */
+  height: 100%;
+  /* Full height */
+  position: absolute;
+  top: 0;
+  background: rgba(0, 0, 0, 0.1);
+  /* Semi-transparent background */
+  z-index: 1;
+  /* Ensure it's above the carousel */
+}
+
+.left-edge {
+  left: 0;
+}
+
+.right-edge {
+  right: 0;
+}
+
+.random-images {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.random-image {
+  width: 200px;
+  /* Adjust as needed */
+  height: auto;
+  margin: 0 5px;
+}
+
+.draw-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #61dafb;
+  color: #282c34;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.draw-button:hover {
+  background-color: #21a1f1;
+  transform: scale(1.05);
+}
+
+.draw-button:focus {
+  outline: none;
 }
