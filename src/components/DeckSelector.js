@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
 import '../styles/DeckSelector.css';
 
+const DIGIMON_SHEET_ID = '1OUe7UXkv4thBKIpJu0E3d7fCVj3qUwxBuAZxKJ45nFk';
+const getDigimonDeckUrl = (guid) => {
+  return `https://docs.google.com/spreadsheets/d/${DIGIMON_SHEET_ID}/pub?gid=${guid}&single=true&output=csv`;
+}
+
 const decks = [
-  { name: 'Blue Hybrid', url: 'https://docs.google.com/spreadsheets/d/1OUe7UXkv4thBKIpJu0E3d7fCVj3qUwxBuAZxKJ45nFk/pub?gid=423063197&single=true&output=csv' },
-  { name: 'DexDorugoramon', url: 'https://docs.google.com/spreadsheets/d/1OUe7UXkv4thBKIpJu0E3d7fCVj3qUwxBuAZxKJ45nFk/pub?gid=2141440214&single=true&output=csv' },
-  { name: 'Red Hybrid', url: 'https://docs.google.com/spreadsheets/d/1OUe7UXkv4thBKIpJu0E3d7fCVj3qUwxBuAZxKJ45nFk/pub?gid=1676514637&single=true&output=csv' },
-  { name: 'DigiPolice', url: 'https://docs.google.com/spreadsheets/d/1OUe7UXkv4thBKIpJu0E3d7fCVj3qUwxBuAZxKJ45nFk/pub?gid=989741694&single=true&output=csv' },
-  { name: 'Shinegreymon', url: 'https://docs.google.com/spreadsheets/d/1OUe7UXkv4thBKIpJu0E3d7fCVj3qUwxBuAZxKJ45nFk/pub?gid=147658920&single=true&output=csv' },
-  { name: 'Phoenixmon', url: 'https://docs.google.com/spreadsheets/d/1OUe7UXkv4thBKIpJu0E3d7fCVj3qUwxBuAZxKJ45nFk/pub?gid=1539851034&single=true&output=csv' },
-  { name: 'Eosmon', url: 'https://docs.google.com/spreadsheets/d/1OUe7UXkv4thBKIpJu0E3d7fCVj3qUwxBuAZxKJ45nFk/pub?gid=538505515&single=true&output=csv' },
-  { name: 'Omnimon', url: 'https://docs.google.com/spreadsheets/d/1OUe7UXkv4thBKIpJu0E3d7fCVj3qUwxBuAZxKJ45nFk/pub?gid=1397861951&single=true&output=csv' },
-  { name: 'Leviamon', url: 'https://docs.google.com/spreadsheets/d/1OUe7UXkv4thBKIpJu0E3d7fCVj3qUwxBuAZxKJ45nFk/pub?gid=2017365004&single=true&output=csv' },
+  { name: 'Blue Hybrid', guid: 423063197 },
+  { name: 'DexDorugoramon', guid: 2141440214 },
+  { name: 'Red Hybrid', guid: 1676514637 },
+  { name: 'DigiPolice', guid: 989741694 },
+  { name: 'Shinegreymon', guid: 147658920 },
+  { name: 'Phoenixmon', guid: 1539851034 },
+  { name: 'Eosmon', guid: 538505515 },
+  { name: 'Omnimon', guid: 1397861951 },
+  { name: 'Leviamon', guid: 2017365004 },
   // Add more decks as needed
 ];
 
@@ -36,7 +41,7 @@ const DeckSelector = ({ onSelectDeck }) => {
           <div 
             key={deck.name} 
             className="navbar-dropdown-item" 
-            onClick={() => { onSelectDeck(deck.url); setIsMenuOpen(false); }}
+            onClick={() => { onSelectDeck(deck); setIsMenuOpen(false); }}
           >
             {deck.name}
           </div>
