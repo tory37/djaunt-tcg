@@ -1,74 +1,81 @@
-<<<<<<< HEAD
-# djaunt-tcg
-=======
-# Getting Started with Create React App
+# Djaunt TCG
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Djaunt TCG is a web application designed for managing and displaying trading card game (TCG) decks. The application allows users to view different decks, switch between various display modes, and manage card information efficiently.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Deck Management**: Users can select different decks from a dropdown menu.
+- **Multiple Views**: The application supports three different views for displaying cards:
+  - **Full View**: Displays cards with images and detailed information.
+  - **Mid View**: Displays a single image per card along with the card name, card set, and have/total count.
+  - **List View**: Displays card names, card sets, and have/total counts without images.
+- **Responsive Design**: The application is designed to be responsive and user-friendly across different devices.
 
-### `npm start`
+## Technologies Used
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **React**: A JavaScript library for building user interfaces.
+- **React Router**: For handling routing within the application.
+- **Axios**: For making HTTP requests to fetch data from Google Sheets.
+- **PapaParse**: For parsing CSV data fetched from Google Sheets.
+- **CSS**: For styling the application.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Getting Started
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Make sure you have the following installed on your machine:
 
-### `npm run build`
+- [Node.js](https://nodejs.org/) (version 14 or higher)
+- [npm](https://www.npmjs.com/) (comes with Node.js)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Installation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **Clone the repository**:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+   ```bash
+   git clone git@github.com:tory37/djaunt-tcg.git
+   cd djaunt-tcg
+   ```
 
-### `npm run eject`
+2. **Install dependencies**:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+   ```bash
+   npm install
+   ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Running the Application
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. **Start the development server**:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+   ```bash
+   npm start
+   ```
 
-## Learn More
+2. **Open your browser** and navigate to [http://localhost:3000](http://localhost:3000) to view the application.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Using the Application
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **Selecting a Deck**: Click on the hamburger menu in the top right corner to select a deck from the dropdown list.
+- **Switching Views**: Use the pill selector below the deck name to switch between Full, Mid, and List views.
+- **Viewing Cards**: Depending on the selected view, cards will be displayed with varying levels of detail.
 
-### Code Splitting
+### Data Source
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+The application fetches card data from a Google Sheets document. Ensure that the URLs for the decks are correctly set in the `DeckSelector.js` component.
 
-### Analyzing the Bundle Size
+### Contributing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+If you would like to contribute to this project, please fork the repository and submit a pull request. 
 
-### Making a Progressive Web App
+### License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-### Advanced Configuration
+## Troubleshooting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- If you encounter issues with dependencies, try deleting the `node_modules` folder and running `npm install` again.
+- Ensure that your Google Sheets document is publicly accessible if you are having trouble fetching data.
 
-### Deployment
+## Acknowledgments
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
->>>>>>> main
+- Thanks to the creators of React, React Router, Axios, and PapaParse for their excellent libraries that made this project possible.
