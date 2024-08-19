@@ -1,0 +1,28 @@
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #282c34;
+}
+
+.game-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+  padding: 0;
+  background-color: #61dafb;
+  border-radius: 5px;
+  width: 200px;
+  height: 100px;
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.game-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
