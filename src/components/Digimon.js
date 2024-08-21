@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react';
 import Papa from 'papaparse';
 import axios from 'axios';
 import DeckSelector from './DeckSelector';
+import FullView from './FullView';
+import MidView from './MidView';
+import ListView from './ListView';
 import CardStack from './CardStack';
 import CardCarousel from './CardCarousel';
 import '../styles/Digimon.css';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const DIGIMON_SHEET_ID = '1OUe7UXkv4thBKIpJu0E3d7fCVj3qUwxBuAZxKJ45nFk';
 const decks = [
@@ -24,7 +27,11 @@ const getDigimonDeckUrl = (guid) => {
   return `https://docs.google.com/spreadsheets/d/${DIGIMON_SHEET_ID}/pub?gid=${guid}&single=true&output=csv`;
 };
 
-const Digimon = ({ location }) => {
+const getDigimonCardImageUrl = (cardSet) => {
+  return `https://images.digimoncard.io/images/cards/${cardSet}.jpg`;
+};
+
+const Digimon = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -33,6 +40,8 @@ const Digimon = ({ location }) => {
   const navigate = useNavigate();
   const [selectedCard, setSelectedCard] = useState(null);
   const [drawnImages, setDrawnImages] = useState([]);
+
+  const location = useLocation();
 
   const handleCardClick = (card) => () => {
     setSelectedCard(card);
@@ -101,22 +110,10 @@ const Digimon = ({ location }) => {
               isValid(card['Card Set']) &&
               isValid(card['Card Name']) &&
               isValid(card['Have']) &&
-              isValid(card['Need']) &&
-              isValid(card['Image'])
-            );
+              isValid(card['Need'])
+            )?.map(card => ({ ...card, Image: getDigimonCardImageUrl(card['Card Set']) }));
 
-            // // Fetch additional data from the Digimon API using the rate-limited fetch
-            // const apiRequests = filteredData.map(async (card) => {
-            //   const cardSet = card['Card Set'];
-            //   const apiData = await fetchCardData(cardSet); // Use the caching fetch
-            //   return { ...card, ...apiData }; // Concatenate the data
-            // });
-
-            // // Wait for all API requests to complete
-            // const apiData = await Promise.all(apiRequests);
-            // console.log('API data fetched:', apiData);
-
-            setData(filteredData); // Update state with concatenated data
+            setData(filteredData);
             setLoading(false);
           },
           error: (err) => {
@@ -133,26 +130,11 @@ const Digimon = ({ location }) => {
     } 
   };
 
-  // const loadAllDecks = async () => {
-  //   const delay = 10000; // 10 seconds
-  //   const requestsPerBatch = 15;
-  //   const totalDecks = decks.length;
-
-  //   for (let i = 0; i < totalDecks; i += requestsPerBatch) {
-  //     const currentBatch = decks.slice(i, i + requestsPerBatch);
-  //     await Promise.all(currentBatch.map(deck => fetchData(deck)));
-  //     if (i + requestsPerBatch < totalDecks) {
-  //       await new Promise(resolve => setTimeout(resolve, delay)); // Wait for 10 seconds
-  //     }
-  //   }
-  // };
-
   useEffect(() => {
     if (selectedDeck) {
       setLoading(true);
       navigate(`?view=${view}&guid=${selectedDeck.guid}`);
-      fetchData(selectedDeck); // Fetch data for the current deck
-      // loadAllDecks(); // Start loading all decks
+      fetchData(selectedDeck);
     } else {
       setError('No matching deck found');
       setLoading(false);
@@ -184,74 +166,9 @@ const Digimon = ({ location }) => {
             <button onClick={() => handleViewChange('carousel')} className={view === 'carousel' ? 'active' : ''}>Carousel</button>
           </div>
           <div className={`digimon-container ${view}`}>
-            {view === 'full' && data.map((card, index) => {
-              const inDeckCount = parseInt(card['In Deck'], 10) || 0;
-              const setNameParts = card['Card Set'] ? card['Card Set'].split('-') : ['', ''];
-              const firstPart = setNameParts[0];
-              const secondPart = setNameParts[1] ? `#${setNameParts[1]}` : '';
-
-              return (
-                <div className="card" key={index}>
-                  <div className="card-image-container">
-                    {[...Array(inDeckCount)].map((_, i) => (
-                      <img
-                        key={i}
-                        src={card['Image']}
-                        alt={card['Card Name']}
-                        className="card-image"
-                        style={{ 
-                          marginTop: `${i > 0 ? -200 : 0}px`, 
-                          zIndex: i,
-                        }}
-                      />
-                    ))}
-                  </div>
-                  <div className="card-details-container">
-                    <div className="card-name">{card['Card Name']}</div>
-                    <div className="card-count">{card['Have']} / {inDeckCount}</div>
-                    <div className="card-set">{firstPart}</div>
-                    <div className="card-set-number">{secondPart}</div>
-                  </div>
-                </div>
-              );
-            })}
-            {view === 'mid' && data.map((card, index) => {
-              const inDeckCount = parseInt(card['In Deck'], 10) || 0;
-              return (
-                <div className="mid-card" key={index}>
-                  <img src={card['Image']} alt={card['Card Name']} className="mid-card-image" />
-                  <div className="mid-card-details">
-                    <div className="mid-card-name">{card['Card Name']}</div>
-                    <div className="mid-card-set">{card['Card Set']}</div>
-                    <div className="mid-card-count">{card['Have']} / {inDeckCount}</div>
-                  </div>
-                </div>
-              );
-            })}
-            {view === 'list' && data.map((card, index) => {
-              const inDeckCount = parseInt(card['In Deck'], 10) || 0;
-              const setNameParts = card['Card Set'] ? card['Card Set'].split('-') : ['', ''];
-              const firstPart = setNameParts[0];
-              const secondPart = setNameParts[1] ? `${setNameParts[1]}` : '';
-
-              return (
-                <div className="list-card" key={index}>
-                  <div className="list-card-name">{card['Card Name']}</div>
-                  <div className="vertical-line"></div>
-                  <div className="list-card-set">
-                    <span className="set-label">Set:</span> {firstPart}
-                  </div>
-                  <div className="vertical-line"></div>
-                  <div className="list-card-set-number">
-                    <span className="set-number-label">#:</span> {secondPart}
-                  </div>
-                  <div className="vertical-line"></div>
-                  <div className="list-card-count">
-                    <span className="have-label">Have:</span> {card['Have']} / <span className="in-deck-label">{inDeckCount}</span>
-                  </div>
-                </div>
-              );
-            })}
+            {view === 'full' && <FullView data={data} handleCardClick={handleCardClick} />}
+            {view === 'mid' && <MidView data={data} />}
+            {view === 'list' && <ListView data={data} />}
             {view === 'stack' && (
               <CardStack getSpreadDeck={getSpreadDeck} handleCardClick={handleCardClick} selectedCard={selectedCard} />
             )}
