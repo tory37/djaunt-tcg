@@ -27,27 +27,24 @@ const DeckSelector = ({ onSelectDeck }) => {
   };
 
   return (
-    <nav className="navbar">
-      <div className="navbar-title">Digimon</div>
-      <div 
-        className="navbar-hamburger" 
-        onClick={toggleMenu} 
-        style={{ transform: isMenuOpen ? 'translateX(-250px)' : 'translateX(0)' }}
-      >
-        &#9776; {/* Hamburger icon */}
-      </div>
-      <div className={`navbar-dropdown ${isMenuOpen ? 'open' : ''}`}>
-        {decks.map(deck => (
-          <div 
-            key={deck.name} 
-            className="navbar-dropdown-item" 
-            onClick={() => { onSelectDeck(deck); setIsMenuOpen(false); }}
-          >
-            {deck.name}
-          </div>
-        ))}
-      </div>
-    </nav>
+    <div className="deck-selector">
+      <button onClick={toggleMenu} className="deck-selector-button">
+        {isMenuOpen ? 'Hide Decks' : 'Select a Deck'}
+      </button>
+      {isMenuOpen && (
+        <div>
+          {decks.map(deck => (
+            <div 
+              key={deck.name} 
+              className="deck-selector-dropdown-item" 
+              onClick={() => { onSelectDeck(deck); setIsMenuOpen(false); }}
+            >
+              {deck.name}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
 

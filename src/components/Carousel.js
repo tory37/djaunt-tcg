@@ -42,16 +42,14 @@ const Carousel = ({ images }) => {
       rightEdge.addEventListener('mouseleave', () => clearInterval());
     }
 
-    carouselRef.current.addEventListener('scroll', updateCenterIndex); // Update center index on scroll
+    carouselRef.current && carouselRef.current.addEventListener('scroll', updateCenterIndex); // Update center index on scroll
 
     return () => {
-      if (leftEdge && rightEdge) {
-        leftEdge.removeEventListener('mouseenter', () => handleMouseEnter(-1));
-        leftEdge.removeEventListener('mouseleave', () => clearInterval());
-        rightEdge.removeEventListener('mouseenter', () => handleMouseEnter(1));
-        rightEdge.removeEventListener('mouseleave', () => clearInterval());
-      }
-      carouselRef.current.removeEventListener('scroll', updateCenterIndex); // Clean up
+      leftEdge && leftEdge.removeEventListener('mouseenter', () => handleMouseEnter(-1));
+      leftEdge && leftEdge.removeEventListener('mouseleave', () => clearInterval());
+      rightEdge && rightEdge.removeEventListener('mouseenter', () => handleMouseEnter(1));
+      rightEdge && rightEdge.removeEventListener('mouseleave', () => clearInterval());
+      carouselRef.current && carouselRef.current.removeEventListener('scroll', updateCenterIndex); // Clean up
     };
   }, []);
 

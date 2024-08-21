@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Papa from 'papaparse';
 import axios from 'axios';
-import DeckSelector from './DeckSelector';
+import NavBar from './NavBar';
 import FullView from './FullView';
 import MidView from './MidView';
 import ListView from './ListView';
@@ -10,6 +10,7 @@ import CarouselView from './CarouselView';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import '../styles/Digimon.css';
+import DeckSelector from './DeckSelector';
 
 const DIGIMON_SHEET_ID = '1OUe7UXkv4thBKIpJu0E3d7fCVj3qUwxBuAZxKJ45nFk';
 const decks = [
@@ -129,7 +130,7 @@ const Digimon = () => {
   };
 
   return (
-    <div className="digimon">
+    <>
       <DeckSelector onSelectDeck={handleSelectDeck} />
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
@@ -161,7 +162,7 @@ const Digimon = () => {
           </div>
         </>
       )}
-    </div>
+    </>
   );
 };
 

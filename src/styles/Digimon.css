@@ -1,16 +1,14 @@
 /* ========================= */
 /* General Container Styles  */
 /* ========================= */
-.digimon {
-  color: #fff;
-}
-
 .digimon-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
   /* Space out the cards */
   padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* ========================= */

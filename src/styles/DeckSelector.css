@@ -1,83 +1,44 @@
-.navbar {
-  background-color: #282c34;
-  /* Dark background */
-  padding: 10px 20px;
-  /* Padding around the navbar */
-  display: flex;
-  justify-content: space-between;
-  /* Space between title and hamburger */
-  align-items: center;
-  /* Center items vertically */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  /* Subtle shadow */
+.deck-selector {
   position: relative;
-  /* Position relative for absolute positioning of dropdown */
-  z-index: 1000;
-  /* Ensure navbar is above other elements */
+  display: inline-block;
+  font-family: 'Arial', sans-serif;
 }
 
-.navbar-title {
-  color: #61dafb;
-  /* Title color */
-  font-size: 24px;
-  /* Title font size */
-}
-
-.navbar-hamburger {
-  font-size: 24px;
-  /* Hamburger icon size */
-  cursor: pointer;
-  /* Pointer cursor on hover */
-  color: #61dafb;
-  /* Hamburger color */
-  transition: transform 0.3s;
-  /* Smooth transition for movement */
-}
-
-.navbar-dropdown {
-  position: fixed;
-  /* Fixed position for full height */
-  top: 0;
-  /* Align to the top */
-  right: -250px;
-  /* Start off-screen to the right */
-  height: 100%;
-  /* Full height */
-  width: 250px;
-  /* Width of the menu */
-  background-color: #282c34;
-  /* Match navbar background */
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-  /* Shadow on the left */
-  transition: right 0.3s;
-  /* Smooth transition for sliding */
-  z-index: 999;
-  /* Ensure dropdown is above other elements */
-}
-
-.navbar-dropdown.open {
-  right: 0;
-  /* Slide in from the right */
-}
-
-.navbar-dropdown-item {
-  background-color: #3a3f47;
-  /* Darker background for items */
-  color: #ffffff;
-  /* Text color */
-  padding: 15px;
-  /* Padding inside items */
-  margin: 5px 0;
-  /* Space between items */
+.deck-selector-button {
+  background-color: #1a1a2e;
+  /* Dark background */
+  color: #e94560;
+  /* Bright accent color */
+  border: none;
   border-radius: 5px;
-  /* Rounded corners */
+  padding: 10px 20px;
   cursor: pointer;
-  /* Pointer cursor on hover */
-  transition: background-color 0.3s;
-  /* Smooth transition */
+  font-size: 16px;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
-.navbar-dropdown-item:hover {
-  background-color: #61dafb;
-  /* Change color on hover */
+.deck-selector-button:hover {
+  background-color: #0f0f1a;
+  /* Lighter on hover */
+  transform: scale(1.05);
+  /* Slightly enlarge on hover */
+}
+
+.deck-selector-dropdown-item {
+  background-color: #162447;
+  /* Dropdown item background */
+  color: #e94560;
+  /* Text color */
+  padding: 10px;
+  border: 1px solid #e94560;
+  /* Border for items */
+  border-radius: 5px;
+  margin: 5px 0;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.deck-selector-dropdown-item:hover {
+  background-color: #0f0f1a;
+  /* Highlight on hover */
 }
