@@ -1,9 +1,10 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 import '../styles/Carousel.css';
 
 const Carousel = ({ images }) => {
   const carouselRef = useRef(null);
+  const [centerIndex, setCenterIndex] = useState(0); // Track the center card index
   const scrollAmount = 5; // Adjust scroll speed
 
   const handleScroll = (direction) => {
@@ -12,6 +13,16 @@ const Carousel = ({ images }) => {
         left: direction * scrollAmount,
         behavior: 'smooth',
       });
+    }
+  };
+
+  const updateCenterIndex = () => {
+    const carousel = carouselRef.current;
+    if (carousel) {
+      const cardWidth = 120; // Assuming each card is 100px wide
+      const centerOffset = carousel.clientWidth / 2; // Half of the carousel width
+      const centerCard = Math.floor((carousel.scrollLeft + centerOffset) / cardWidth); // Adjusted calculation
+      setCenterIndex(centerCard);
     }
   };
 
@@ -31,6 +42,8 @@ const Carousel = ({ images }) => {
       rightEdge.addEventListener('mouseleave', () => clearInterval());
     }
 
+    carouselRef.current.addEventListener('scroll', updateCenterIndex); // Update center index on scroll
+
     return () => {
       if (leftEdge && rightEdge) {
         leftEdge.removeEventListener('mouseenter', () => handleMouseEnter(-1));
@@ -38,11 +51,12 @@ const Carousel = ({ images }) => {
         rightEdge.removeEventListener('mouseenter', () => handleMouseEnter(1));
         rightEdge.removeEventListener('mouseleave', () => clearInterval());
       }
+      carouselRef.current.removeEventListener('scroll', updateCenterIndex); // Clean up
     };
   }, []);
 
   return (
-    <div className="carousel-container">
+    <div className="carousel-container" >
       <div className="left-edge" />
       <div className="carousel" ref={carouselRef}>
         {images.map((image, index) => (
@@ -50,6 +64,11 @@ const Carousel = ({ images }) => {
         ))}
       </div>
       <div className="right-edge" />
+      <div className="center-card">
+        <img src={images[centerIndex]} alt={`Center Card ${centerIndex}`} className="center-image" />
+      </div>
+      <div className="arrow arrow-up" onClick={() => handleScroll(-1)}>&#9660;</div>
+      <div className="arrow arrow-down" onClick={() => handleScroll(1)}>&#9650;</div>
     </div>
   );
 };

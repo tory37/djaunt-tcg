@@ -31,7 +31,7 @@ const CarouselView = ({ data }) => {
   }, [data]);
 
   return (
-    <div className="carousel-container">
+    <>
       <Carousel images={getSpreadDeck().map(card => card['Image'])} />
       <div className="random-images">
         {drawnImages.map((image, index) => (
@@ -39,7 +39,7 @@ const CarouselView = ({ data }) => {
         ))}
       </div>
       <button className="draw-button" onClick={handleDraw}>Draw</button>
-    </div>
+    </>
   );
 };
 
