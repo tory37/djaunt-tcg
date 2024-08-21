@@ -1,5 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 
+import '../styles/Carousel.css';
+
 const Carousel = ({ images }) => {
   const carouselRef = useRef(null);
   const scrollAmount = 5; // Adjust scroll speed

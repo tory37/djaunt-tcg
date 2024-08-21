@@ -302,59 +302,6 @@
   margin-top: 10px;
 }
 
-/* ========================= */
-/* Carousel Styles          */
-/* ========================= */
-.carousel-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  overflow: hidden;
-  /* Hide overflow */
-  position: relative;
-}
-
-.carousel {
-  display: flex;
-  overflow-x: auto;
-  /* Enable horizontal scrolling */
-  scroll-behavior: smooth;
-  /* Smooth scrolling */
-  width: 100%;
-  /* Full width */
-}
-
-.carousel-image {
-  width: 100px;
-  /* Adjust as needed */
-  height: auto;
-  margin: 0 10px;
-  /* Space between images */
-}
-
-.left-edge,
-.right-edge {
-  width: 50px;
-  /* Width of the hover area */
-  height: 100%;
-  /* Full height */
-  position: absolute;
-  top: 0;
-  background: rgba(0, 0, 0, 0.1);
-  /* Semi-transparent background */
-  z-index: 1;
-  /* Ensure it's above the carousel */
-}
-
-.left-edge {
-  left: 0;
-}
-
-.right-edge {
-  right: 0;
-}
-
 .random-images {
   display: flex;
   justify-content: center;

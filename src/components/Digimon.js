@@ -6,9 +6,10 @@ import FullView from './FullView';
 import MidView from './MidView';
 import ListView from './ListView';
 import CardStack from './CardStack';
-import CardCarousel from './CardCarousel';
-import '../styles/Digimon.css';
+import CarouselView from './CarouselView';
 import { useLocation, useNavigate } from 'react-router-dom';
+
+import '../styles/Digimon.css';
 
 const DIGIMON_SHEET_ID = '1OUe7UXkv4thBKIpJu0E3d7fCVj3qUwxBuAZxKJ45nFk';
 const decks = [
@@ -39,34 +40,11 @@ const Digimon = () => {
   const [view, setView] = useState('full');
   const navigate = useNavigate();
   const [selectedCard, setSelectedCard] = useState(null);
-  const [drawnImages, setDrawnImages] = useState([]);
 
   const location = useLocation();
 
   const handleCardClick = (card) => () => {
     setSelectedCard(card);
-  };
-
-  const handleDraw = () => {
-    const randomImages = [];
-    const availableImages = getSpreadDeck().map(card => card['Image']);
-    
-    while (randomImages.length < 5) {
-      const randomIndex = Math.floor(Math.random() * availableImages.length);
-      const randomImage = availableImages[randomIndex];
-      if (!randomImages.includes(randomImage)) {
-        randomImages.push(randomImage);
-      }
-    }
-    
-    setDrawnImages(randomImages);
-  };
-
-  const getSpreadDeck = () => {
-    return data.flatMap(card => {
-      const inDeckCount = parseInt(card['In Deck'], 10) || 0;
-      return Array.from({ length: inDeckCount }, () => card);
-    });
   };
 
   useEffect(() => {
@@ -170,10 +148,15 @@ const Digimon = () => {
             {view === 'mid' && <MidView data={data} />}
             {view === 'list' && <ListView data={data} />}
             {view === 'stack' && (
-              <CardStack getSpreadDeck={getSpreadDeck} handleCardClick={handleCardClick} selectedCard={selectedCard} />
+              <CardStack getSpreadDeck={() => data.flatMap(card => {
+                const inDeckCount = parseInt(card['In Deck'], 10) || 0;
+                return Array.from({ length: inDeckCount }, () => card);
+              })} handleCardClick={handleCardClick} selectedCard={selectedCard} />
             )}
             {view === 'carousel' && (
-              <CardCarousel getSpreadDeck={getSpreadDeck} drawnImages={drawnImages} handleDraw={handleDraw} />
+              <CarouselView 
+                data={data}
+              />
             )}
           </div>
         </>
