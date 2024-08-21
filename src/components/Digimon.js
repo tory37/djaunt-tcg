@@ -5,7 +5,6 @@ import NavBar from './NavBar';
 import FullView from './FullView';
 import MidView from './MidView';
 import ListView from './ListView';
-import CardStack from './CardStack';
 import CarouselView from './CarouselView';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -141,19 +140,12 @@ const Digimon = () => {
             <button onClick={() => handleViewChange('full')} className={view === 'full' ? 'active' : ''}>Full</button>
             <button onClick={() => handleViewChange('mid')} className={view === 'mid' ? 'active' : ''}>Mid</button>
             <button onClick={() => handleViewChange('list')} className={view === 'list' ? 'active' : ''}>List</button>
-            <button onClick={() => handleViewChange('stack')} className={view === 'stack' ? 'active' : ''}>Stack</button>
             <button onClick={() => handleViewChange('carousel')} className={view === 'carousel' ? 'active' : ''}>Carousel</button>
           </div>
           <div className={`digimon-container ${view}`}>
             {view === 'full' && <FullView data={data} handleCardClick={handleCardClick} />}
             {view === 'mid' && <MidView data={data} />}
             {view === 'list' && <ListView data={data} />}
-            {view === 'stack' && (
-              <CardStack getSpreadDeck={() => data.flatMap(card => {
-                const inDeckCount = parseInt(card['In Deck'], 10) || 0;
-                return Array.from({ length: inDeckCount }, () => card);
-              })} handleCardClick={handleCardClick} selectedCard={selectedCard} />
-            )}
             {view === 'carousel' && (
               <CarouselView 
                 data={data}

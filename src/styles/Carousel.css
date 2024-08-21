@@ -12,6 +12,11 @@
   justify-content: center;
 }
 
+.carousel-container.vertical {
+  flex-direction: row;
+  /* Change to row for vertical layout */
+}
+
 .carousel {
   display: flex;
   overflow-x: auto;
@@ -20,7 +25,13 @@
   /* Smooth scrolling */
   width: 100%;
   /* Full width */
+}
 
+.carousel.vertical {
+  flex-direction: column;
+  /* Change to column for vertical layout */
+  overflow-y: auto;
+  /* Enable vertical scrolling */
 }
 
 .carousel-image {
@@ -53,6 +64,13 @@
   right: 0;
 }
 
+.left-edge.vertical,
+.right-edge.vertical {
+  width: 100%;
+  height: 50px;
+  /* Adjust height for vertical edges */
+}
+
 .center-card {
   position: absolute;
   /* Adjust as needed */
@@ -60,6 +78,14 @@
   transform: translateX(-50%);
   z-index: 2;
   /* Ensure it's above the carousel */
+  pointer-events: none;
+  /* Allow clicks to pass through */
+}
+
+.center-card.vertical {
+  top: 50%;
+  transform: translateY(-50%);
+  /* Center the card vertically */
 }
 
 .center-image {
@@ -75,6 +101,28 @@
   cursor: pointer;
   font-size: 24px;
   z-index: 3;
+}
+
+.arrow-left {
+  left: -15px;
+  /* Position left arrow for vertical */
+}
+
+.arrow-right {
+  right: -15px;
+  /* Position right arrow for vertical */
+}
+
+.arrow-up {
+  top: -15px;
+  /* Position above the carousel */
+  animation: bounceup 2s infinite;
+}
+
+.arrow-down {
+  bottom: -15px;
+  /* Position below the carousel */
+  animation: bouncedown 2s infinite;
 }
 
 /* Bouncing animation keyframes */
@@ -124,16 +172,4 @@
     transform: translateY(3px);
     /* Move up again */
   }
-}
-
-.arrow-up {
-  top: -15px;
-  /* Position above the carousel */
-  animation: bounceup 2s infinite;
-}
-
-.arrow-down {
-  bottom: -15px;
-  /* Position below the carousel */
-  animation: bouncedown 2s infinite;
 }
