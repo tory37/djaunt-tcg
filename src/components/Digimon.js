@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import Papa from 'papaparse';
+import axios from 'axios';
 import DeckSelector from './DeckSelector';
+import CardStack from './CardStack';
+import CardCarousel from './CardCarousel';
 import '../styles/Digimon.css';
 import { useNavigate } from 'react-router-dom';
-import Carousel from './Carousel';
 
 const DIGIMON_SHEET_ID = '1OUe7UXkv4thBKIpJu0E3d7fCVj3qUwxBuAZxKJ45nFk';
 const decks = [
@@ -28,13 +29,13 @@ const Digimon = ({ location }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedDeck, setSelectedDeck] = useState(null);
-  const [view, setView] = useState('full'); // Default view
-  const navigate = useNavigate(); // Initialize useNavigate
-  const [selectedCard, setSelectedCard] = useState(null); // State to track the selected card
+  const [view, setView] = useState('full');
+  const navigate = useNavigate();
+  const [selectedCard, setSelectedCard] = useState(null);
   const [drawnImages, setDrawnImages] = useState([]);
 
   const handleCardClick = (card) => () => {
-    setSelectedCard(card); // Set the selected card when clicked
+    setSelectedCard(card);
   };
 
   const handleDraw = () => {
@@ -59,7 +60,6 @@ const Digimon = ({ location }) => {
     });
   };
 
-  // Read query parameters
   useEffect(() => {
     setError(null);
     const params = new URLSearchParams(location.search);
@@ -84,16 +84,16 @@ const Digimon = ({ location }) => {
     return value !== undefined && value !== null && value !== '';
   };
 
-  const fetchData = async () => {
-    if (selectedDeck) {
-      console.log('Fetching data from Google Sheets...');
+  const fetchData = async (deck) => {
+    if (deck) {
+      console.log(`Fetching data for deck: ${deck.name}`);
       try {
-        const response = await axios.get(getDigimonDeckUrl(selectedDeck.guid));
+        const response = await axios.get(getDigimonDeckUrl(deck.guid));
         console.log('Data fetched successfully:', response.data);
         
         Papa.parse(response.data, {
           header: true,
-          complete: (results) => {
+          complete: async (results) => {
             console.log('CSV parsing complete. Parsed data:', results.data);
             
             const filteredData = results.data.filter(card => 
@@ -105,8 +105,18 @@ const Digimon = ({ location }) => {
               isValid(card['Image'])
             );
 
-            console.log('Filtered data:', filteredData);
-            setData(filteredData);
+            // // Fetch additional data from the Digimon API using the rate-limited fetch
+            // const apiRequests = filteredData.map(async (card) => {
+            //   const cardSet = card['Card Set'];
+            //   const apiData = await fetchCardData(cardSet); // Use the caching fetch
+            //   return { ...card, ...apiData }; // Concatenate the data
+            // });
+
+            // // Wait for all API requests to complete
+            // const apiData = await Promise.all(apiRequests);
+            // console.log('API data fetched:', apiData);
+
+            setData(filteredData); // Update state with concatenated data
             setLoading(false);
           },
           error: (err) => {
@@ -123,11 +133,26 @@ const Digimon = ({ location }) => {
     } 
   };
 
+  // const loadAllDecks = async () => {
+  //   const delay = 10000; // 10 seconds
+  //   const requestsPerBatch = 15;
+  //   const totalDecks = decks.length;
+
+  //   for (let i = 0; i < totalDecks; i += requestsPerBatch) {
+  //     const currentBatch = decks.slice(i, i + requestsPerBatch);
+  //     await Promise.all(currentBatch.map(deck => fetchData(deck)));
+  //     if (i + requestsPerBatch < totalDecks) {
+  //       await new Promise(resolve => setTimeout(resolve, delay)); // Wait for 10 seconds
+  //     }
+  //   }
+  // };
+
   useEffect(() => {
     if (selectedDeck) {
-      setLoading(true); // Reset loading state
-      navigate(`?view=${view}&guid=${selectedDeck.guid}`); // Update URL with view and selected deck GUID
-      fetchData(getDigimonDeckUrl(selectedDeck.guid));
+      setLoading(true);
+      navigate(`?view=${view}&guid=${selectedDeck.guid}`);
+      fetchData(selectedDeck); // Fetch data for the current deck
+      // loadAllDecks(); // Start loading all decks
     } else {
       setError('No matching deck found');
       setLoading(false);
@@ -140,7 +165,7 @@ const Digimon = ({ location }) => {
 
   const handleViewChange = (newView) => {
     setView(newView);
-    navigate(`?view=${newView}&guid=${selectedDeck.guid}`); // Update URL with new view and current deck GUID
+    navigate(`?view=${newView}&guid=${selectedDeck.guid}`);
   };
 
   return (
@@ -150,12 +175,12 @@ const Digimon = ({ location }) => {
       {error && <p>{error}</p>}
       {!loading && !error && (
         <>
-        <h2>{selectedDeck ? selectedDeck.name : 'Select a Deck'}</h2> {/* Display current deck name */}
+          <h2>{selectedDeck ? selectedDeck.name : 'Select a Deck'}</h2>
           <div className="view-selector">
             <button onClick={() => handleViewChange('full')} className={view === 'full' ? 'active' : ''}>Full</button>
             <button onClick={() => handleViewChange('mid')} className={view === 'mid' ? 'active' : ''}>Mid</button>
             <button onClick={() => handleViewChange('list')} className={view === 'list' ? 'active' : ''}>List</button>
-            <button onClick={() => handleViewChange('stack')} className={view === 'stack' ? 'active' : ''}>Stack</button> {/* New Stack View */}
+            <button onClick={() => handleViewChange('stack')} className={view === 'stack' ? 'active' : ''}>Stack</button>
             <button onClick={() => handleViewChange('carousel')} className={view === 'carousel' ? 'active' : ''}>Carousel</button>
           </div>
           <div className={`digimon-container ${view}`}>
@@ -228,35 +253,10 @@ const Digimon = ({ location }) => {
               );
             })}
             {view === 'stack' && (
-              <>
-                <div className="stack-container">
-                  {getSpreadDeck().map((card, index) => (
-                    <div key={`${card['Card Name']}-${index}`} className="stack-card">
-                      <img src={card['Image']} alt={card['Card Name']} onClick={handleCardClick(card)} className="stack-card-image" />
-                    </div>
-                  ))}
-                </div>
-                <div className="selected-card">
-                  {selectedCard ? (
-                    <img src={selectedCard['Image']} alt={selectedCard['Card Name']} className="large-card-image" />
-                  ) : (
-                    <div className="select-card-placeholder">
-                      Select a card
-                    </div>
-                  )}
-                </div>
-              </>
+              <CardStack getSpreadDeck={getSpreadDeck} handleCardClick={handleCardClick} selectedCard={selectedCard} />
             )}
             {view === 'carousel' && (
-              <div className="carousel-container">
-                <Carousel images={getSpreadDeck().map(card => card['Image'])} />
-                <div className="random-images">
-                  {drawnImages.map((image, index) => (
-                    <img key={index} src={image} alt={`Random ${index}`} className="random-image" />
-                  ))}
-                </div>
-                <button className="draw-button" onClick={handleDraw}>Draw</button>
-              </div>
+              <CardCarousel getSpreadDeck={getSpreadDeck} drawnImages={drawnImages} handleDraw={handleDraw} />
             )}
           </div>
         </>

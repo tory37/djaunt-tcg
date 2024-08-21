@@ -212,7 +212,7 @@
 .list-card-set,
 .list-card-set-number,
 .list-card-count {
-  max-width: 100px;
+  width: 100px;
   /* Set max width for each field */
   overflow: hidden;
   /* Hide overflow */
