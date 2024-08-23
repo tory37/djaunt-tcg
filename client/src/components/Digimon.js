@@ -47,6 +47,19 @@ const Digimon = () => {
     setSelectedCard(card);
   };
 
+  const exportDeck = () => {
+    const deckList = data.map(card => {
+      const inDeckCount = parseInt(card['In Deck'], 10) || 0;
+      return `${inDeckCount} ${card['Card Name']} ${card['Card Set']}`;
+    }).join('\n');
+    const deckString = `// Digimon DeckList\n\n${deckList}`;
+    navigator.clipboard.writeText(deckString).then(() => {
+      alert('Deck list copied to clipboard!');
+    }).catch(err => {
+      console.error('Failed to copy text: ', err);
+    });
+  };
+
   useEffect(() => {
     setError(null);
     const params = new URLSearchParams(location.search);
@@ -130,6 +143,7 @@ const Digimon = () => {
 
   return (
     <>
+      <button onClick={exportDeck}>Export Deck</button> {/* Add export button */}
       <DeckSelector onSelectDeck={handleSelectDeck} />
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
