@@ -11,9 +11,7 @@ const CarouselView = ({ data }) => {
     while (randomImages.length < 5) {
       const randomIndex = Math.floor(Math.random() * availableImages.length);
       const randomImage = availableImages[randomIndex];
-      if (!randomImages.includes(randomImage)) {
-        randomImages.push(randomImage);
-      }
+      randomImages.push(randomImage);
     }
     
     setDrawnImages(randomImages);
