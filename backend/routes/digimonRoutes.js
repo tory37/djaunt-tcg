@@ -1,5 +1,4 @@
 const express = require('express');
-const { getAllCards } = require('../controllers/digimonController');
 const router = express.Router();
 const digimonController = require('../controllers/digimonController');
 

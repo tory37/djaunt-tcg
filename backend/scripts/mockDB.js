@@ -22,16 +22,16 @@ const mockData = async () => {
   });
   await user.save();
 
-  // Create Digimon cards
+  // Real-world Digimon 2020 TCG data (sample)
   const cards = [
-    { set: 'BT1', color: 'Red', name: 'Agumon', level: 3, type: 'Dinosaur', number: 'BT1-010' },
+    { set: 'BT1', color: 'Red', name: 'Agumon', level: 3, type: 'Reptile', number: 'BT1-010' },
     { set: 'BT1', color: 'Blue', name: 'Gabumon', level: 3, type: 'Reptile', number: 'BT1-020' },
     { set: 'BT1', color: 'Yellow', name: 'Patamon', level: 3, type: 'Mammal', number: 'BT1-030' },
     { set: 'BT1', color: 'Green', name: 'Palmon', level: 3, type: 'Plant', number: 'BT1-040' },
-    { set: 'BT1', color: 'Black', name: 'Agumon (Black)', level: 3, type: 'Dinosaur', number: 'BT1-050' },
+    { set: 'BT1', color: 'Black', name: 'Agumon (Black)', level: 3, type: 'Reptile', number: 'BT1-050' },
     { set: 'BT1', color: 'Purple', name: 'DemiDevimon', level: 3, type: 'Evil', number: 'BT1-060' },
+    // Add more cards as needed
   ];
-
   const savedCards = await DigimonCard.insertMany(cards);
 
   // Create decks
@@ -39,17 +39,14 @@ const mockData = async () => {
     { name: 'Red Deck', user_id: user._id },
     { name: 'Blue Deck', user_id: user._id },
   ];
-
   const savedDecks = await DigimonDeck.insertMany(decks);
 
-  // Add cards to decks
-  const deckCards = [
-    { deck_id: savedDecks[0]._id, card_id: savedCards[0]._id, quantity: 4 },
-    { deck_id: savedDecks[0]._id, card_id: savedCards[1]._id, quantity: 4 },
-    { deck_id: savedDecks[1]._id, card_id: savedCards[2]._id, quantity: 4 },
-    { deck_id: savedDecks[1]._id, card_id: savedCards[3]._id, quantity: 4 },
-  ];
-
+  // Add multiple instances of cards to each deck
+  const deckCards = [];
+  for (let i = 0; i < savedCards.length; i++) {
+    deckCards.push({ deck_id: savedDecks[0]._id, card_id: savedCards[i]._id, quantity: 10 }); // 10 instances of each card in Red Deck
+    deckCards.push({ deck_id: savedDecks[1]._id, card_id: savedCards[i]._id, quantity: 10 }); // 10 instances of each card in Blue Deck
+  }
   await DeckCard.insertMany(deckCards);
 
   console.log('Database populated with mock data');

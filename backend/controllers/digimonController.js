@@ -47,7 +47,13 @@ const deleteCard = async (req, res) => {
 // Get all decks
 const getAllDecks = async (req, res) => {
   try {
-    const decks = await DigimonDeck.find().populate('user_id');
+    const decks = await DigimonDeck.find().populate('user_id').populate({
+      path: 'cards',
+      populate: {
+        path: 'card_id',
+        model: 'DigimonCard'
+      }
+    });
     res.status(200).json(decks);
   } catch (error) {
     res.status(500).json({ error: error.message });
