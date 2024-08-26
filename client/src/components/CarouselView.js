@@ -6,7 +6,7 @@ const CarouselView = ({ data }) => {
 
   const handleDraw = () => {
     const randomImages = [];
-    const availableImages = getSpreadDeck().map(card => card['Image']);
+    const availableImages = getSpreadDeck().map(card => card.image);
     
     while (randomImages.length < 5) {
       const randomIndex = Math.floor(Math.random() * availableImages.length);
@@ -21,8 +21,7 @@ const CarouselView = ({ data }) => {
 
   const getSpreadDeck = () => {
     return data.flatMap(card => {
-      const inDeckCount = parseInt(card['In Deck'], 10) || 0;
-      return Array.from({ length: inDeckCount }, () => card);
+      return Array.from({ length: card.quantity }, () => card);
     });
   }; 
 
@@ -32,7 +31,7 @@ const CarouselView = ({ data }) => {
 
   return (
     <>
-      <Carousel images={getSpreadDeck().map(card => card['Image'])} />
+      <Carousel images={getSpreadDeck().map(card => card.image)} />
       <div className="random-images">
         {drawnImages.map((image, index) => (
           <img key={index} src={image} alt={`Random ${index}`} className="random-image" />
