@@ -11,18 +11,38 @@
   box-sizing: border-box;
 }
 
+.deck-display-container {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.deck-image-container {
+  width: 48%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.deck-image {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  height: 100%;
+}
+
 /* ========================= */
 /* View Specific Styles      */
 /* ========================= */
-.digimon-container.full {
+.deck-display-container.full {
   flex-direction: row;
 }
 
-.digimon-container.mid {
+.deck-display-container.mid {
   flex-direction: row;
 }
 
-.digimon-container.list {
+.deck-display-container.list {
   flex-direction: column;
 }
 
@@ -38,13 +58,12 @@
   width: 150px;
   height: auto;
   margin: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 10px;
-  background-color: #f9f9f9;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  background-color: #414a4c;
-  color: #fff;
+}
+
+.card:hover {
+  transform: scale(2);
+  z-index: 100; 
 }
 
 /* ========================= */
@@ -264,4 +283,27 @@
 
 .draw-button:focus {
   outline: none;
+}
+
+.in-deck-count {
+  position: absolute;
+  bottom: 10px; /* Position at the bottom */
+  right: 10px; /* Position at the right */
+  width: 30px; /* Increased size for prominence */
+  height: 30px; /* Increased size for prominence */
+  background-color: #8B4513; /* Earthy brown color */
+  color: white;
+  border-radius: 15px; /* Perfect circle */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px; /* Larger font for prominence */
+  font-weight: bold; /* Modern bold font */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Enhanced shadow for more depth */
+  transition: transform 0.2s, background-color 0.3s; /* Smooth transitions */
+}
+
+.in-deck-count:hover {
+  transform: scale(1.15); /* More pronounced enlargement on hover */
+  background-color: #A0522D; /* Darker earthy shade on hover */
 }

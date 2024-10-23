@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
-import './styles/App.css';
-import Password from './components/Password';
-import Home from './components/Home';
-import Digimon from './components/Digimon';
-import AppWrapper from './components/AppWrapper';
-import { isLoggedIn, logout } from './services/auth';
+import React, { useState, useEffect } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
+import "./styles/App.css";
+import Password from "./components/Password";
+import Home from "./components/Home";
+import Digimon from "./components/Digimon";
+import AppWrapper from "./components/AppWrapper";
+import { isLoggedIn, logout } from "./services/auth";
+import UnionArena from "./components/UnionArena";
 
 function App() {
   const [isLoggedInState, setIsLoggedInState] = useState(false);
@@ -29,6 +30,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/digimon" element={<Digimon />} />
+            <Route path="/union-arena" element={<UnionArena />} />
           </Routes>
         </AppWrapper>
       ) : (

@@ -1,6 +1,5 @@
 .navbar {
   background-color: #282c34;
-  padding: 10px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -17,4 +16,25 @@
 .navbar-title {
   color: #61dafb;
   font-size: 24px;
+}
+
+.navbar-section {
+  cursor: pointer;
+  flex: 1;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  height: calc(100% - 20px);
+  padding: 10px;
+}
+
+.navbar-section:hover {
+  background-color: #e9ecef;
+}
+
+.navbar-logo {
+  max-width: 100px; /* Adjust size as needed */
+  height: 100%;
+  max-height: 80px;
 }

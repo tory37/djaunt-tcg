@@ -1,17 +1,19 @@
-import React from 'react';
+import React from "react";
 
 const ListView = ({ data }) => {
   return (
     <>
       {data.map((card, index) => {
-        const inDeckCount = parseInt(card['In Deck'], 10) || 0;
-        const setNameParts = card['Card Set'] ? card['Card Set'].split('-') : ['', ''];
+        const inDeckCount = parseInt(card["Total"], 10) || 0;
+        const setNameParts = card["Number"]
+          ? card["Number"].split("-")
+          : ["", ""];
         const firstPart = setNameParts[0];
-        const secondPart = setNameParts[1] ? `${setNameParts[1]}` : '';
+        const secondPart = setNameParts[1] ? `${setNameParts[1]}` : "";
 
         return (
           <div className="list-card" key={index}>
-            <div className="list-card-name">{card['Card Name']}</div>
+            <div className="list-card-name">{card["Card"]}</div>
             <div className="vertical-line"></div>
             <div className="list-card-set">
               <span className="set-label">Set:</span> {firstPart}
@@ -22,7 +24,8 @@ const ListView = ({ data }) => {
             </div>
             <div className="vertical-line"></div>
             <div className="list-card-count">
-              <span className="have-label">Have:</span> {card['Have']} / <span className="in-deck-label">{inDeckCount}</span>
+              <span className="have-label">Have:</span> {card["Have"]} /{" "}
+              <span className="in-deck-label">{inDeckCount}</span>
             </div>
           </div>
         );
