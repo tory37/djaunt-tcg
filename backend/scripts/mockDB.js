@@ -24,12 +24,12 @@ const mockData = async () => {
 
   // Real-world Digimon 2020 TCG data (sample)
   const cards = [
-    { set: 'BT1', color: 'Red', name: 'Agumon', level: 3, type: 'Reptile', number: 'BT1-010' },
-    { set: 'BT1', color: 'Blue', name: 'Gabumon', level: 3, type: 'Reptile', number: 'BT1-020' },
-    { set: 'BT1', color: 'Yellow', name: 'Patamon', level: 3, type: 'Mammal', number: 'BT1-030' },
-    { set: 'BT1', color: 'Green', name: 'Palmon', level: 3, type: 'Plant', number: 'BT1-040' },
-    { set: 'BT1', color: 'Black', name: 'Agumon (Black)', level: 3, type: 'Reptile', number: 'BT1-050' },
-    { set: 'BT1', color: 'Purple', name: 'DemiDevimon', level: 3, type: 'Evil', number: 'BT1-060' },
+    { set: 'BT1', color: 'Red', name: 'Agumon', level: 3, type: 'Digimon', number: 'BT1-010' },
+    { set: 'BT1', color: 'Blue', name: 'Gabumon', level: 3, type: 'Digimon', number: 'BT1-020' },
+    { set: 'BT1', color: 'Yellow', name: 'Patamon', level: 3, type: 'Digimon', number: 'BT1-030' },
+    { set: 'BT1', color: 'Green', name: 'Palmon', level: 3, type: 'Digimon', number: 'BT1-040' },
+    { set: 'BT1', color: 'Black', name: 'Agumon (Black)', level: 3, type: 'Digimon', number: 'BT1-050' },
+    { set: 'BT1', color: 'Purple', name: 'DemiDevimon', level: 3, type: 'Digimon', number: 'BT1-060' },
     // Add more cards as needed
   ];
   const savedCards = await DigimonCard.insertMany(cards);

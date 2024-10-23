@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { getAllDecks, getDeckWithCards } from '../api/Digimon';
+import { getAllDecks, getDeckWithCards } from '../../api/Digimon';
 import FullView from './FullView';
 import MidView from './MidView';
 import ListView from './ListView';
 import CarouselView from './CarouselView';
 import { useLocation, useNavigate } from 'react-router-dom';
-import '../styles/Digimon.css';
+import '../../styles/Digimon.css';
 import DeckSelector from './DeckSelector';
 
-const Digimon = () => {
+const Decks = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -68,6 +68,7 @@ const Digimon = () => {
       getDeckWithCards(selectedDeck._id).then(deckData => {
         const parsedData = deckData.cards.map(deckCard => ({
           set: deckCard.card_id.set,
+          number: deckCard.card_id.number,
           name: deckCard.card_id.name,
           quantity: deckCard.quantity,
           image: `https://images.digimoncard.io/images/cards/${deckCard.card_id.number}.jpg`
@@ -126,4 +127,4 @@ const Digimon = () => {
   );
 };
 
-export default Digimon;
+export default Decks;

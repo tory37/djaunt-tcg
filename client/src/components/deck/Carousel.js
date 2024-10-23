@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 
-import '../styles/Carousel.css';
+import '../../styles/Carousel.css';
 
 const Carousel = ({ images, vertical = false }) => {
   const carouselRef = useRef(null);
@@ -55,7 +55,6 @@ const Carousel = ({ images, vertical = false }) => {
 
   return (
     <div className={`carousel-container ${vertical ? 'vertical' : ''}`}>
-      <div className={`left-edge ${vertical ? 'vertical' : ''}`} />
       <div className={`carousel ${vertical ? 'vertical' : ''}`} ref={carouselRef}>
         {images.map((image, index) => (
           <img key={index} src={image} alt={`Card ${index}`} className="carousel-image" />

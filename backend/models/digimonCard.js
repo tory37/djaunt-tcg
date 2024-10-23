@@ -1,12 +1,16 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const digimonCardSchema = new mongoose.Schema({
   set: { type: String, required: true },
-  color: String,
+  colors: [{ type: String, required: true }], // Updated to store an array of colors
   name: String,
   level: Number,
-  type: String,
+  type: { 
+    type: String, 
+    enum: ['Digimon', 'Option', 'Tamer', 'Digitama'], 
+    required: true 
+  },
   number: { type: String, required: true },
 }, { timestamps: true });
 
-module.exports = mongoose.model('DigimonCard', digimonCardSchema);
+export default mongoose.model('DigimonCard', digimonCardSchema);

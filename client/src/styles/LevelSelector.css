@@ -1,0 +1,34 @@
+.level-selector-container {
+  margin-bottom: 10px;
+}
+
+.selector-label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.level-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 5px;
+}
+
+.level-button {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.level-button.selected {
+  background-color: #61dafb;
+  color: white;
+}
+
+.level-button:hover {
+  background-color: #21a1f1;
+  color: white;
+}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { login } from '../services/auth';
+import { login } from '../../services/auth';
 
 const Password = ({ onLogin }) => {
   const [password, setPassword] = useState('');

@@ -7,17 +7,13 @@ const FullView = ({ data, handleCardClick }) => {
   return (
     <>
       {data.map((card, index) => {
-        const setNameParts = card.set ? card.set.split('-') : ['', ''];
-        const firstPart = setNameParts[0];
-        const secondPart = setNameParts[1] ? `#${setNameParts[1]}` : '';
-
         return (
           <div className="card" key={index}>
             <div className="card-image-container">
               {[...Array(card.quantity)].map((_, i) => (
                 <img
                   key={i}
-                  src={`https://images.digimoncard.io/images/cards/${card.set}.jpg`}
+                  src={card.image}
                   alt={card.name}
                   className="card-image"
                   style={{ 
@@ -31,8 +27,8 @@ const FullView = ({ data, handleCardClick }) => {
             <div className="card-details-container">
               <div className="card-name">{card.name}</div>
               <div className="card-count">{card.quantity}</div>
-              <div className="card-set">{firstPart}</div>
-              <div className="card-set-number">{secondPart}</div>
+              <div className="card-set">{card.set}</div>
+              <div className="card-set-number">{card.nmmber}</div>
             </div>
           </div>
         );

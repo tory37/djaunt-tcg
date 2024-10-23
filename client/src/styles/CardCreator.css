@@ -1,0 +1,70 @@
+.card-creator-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-creator-container h2 {
+  text-align: center;
+  color: #333;
+}
+
+.card-creator-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-creator-form select,
+.card-creator-form input {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.card-creator-form button {
+  padding: 10px;
+  background-color: #61dafb;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.card-creator-form button:hover {
+  background-color: #21a1f1;
+}
+
+.existing-cards {
+  margin-top: 20px;
+}
+
+.existing-cards h3 {
+  text-align: center;
+  color: #333;
+}
+
+.existing-cards ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.existing-cards li {
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.existing-cards li:hover {
+  background-color: #f1f1f1;
+}

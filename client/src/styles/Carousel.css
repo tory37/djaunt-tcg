@@ -42,35 +42,6 @@
   /* Space between images */
 }
 
-.left-edge,
-.right-edge {
-  width: 50px;
-  /* Width of the hover area */
-  height: 100%;
-  /* Full height */
-  position: absolute;
-  top: 0;
-  background: rgba(0, 0, 0, 0.1);
-  /* Semi-transparent background */
-  z-index: 1;
-  /* Ensure it's above the carousel */
-}
-
-.left-edge {
-  left: 0;
-}
-
-.right-edge {
-  right: 0;
-}
-
-.left-edge.vertical,
-.right-edge.vertical {
-  width: 100%;
-  height: 50px;
-  /* Adjust height for vertical edges */
-}
-
 .center-card {
   position: absolute;
   /* Adjust as needed */

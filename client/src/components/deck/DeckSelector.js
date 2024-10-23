@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getAllDecks } from '../api/Digimon';
-import '../styles/DeckSelector.css';
+import { getAllDecks } from '../../api/Digimon';
+import '../../styles/DeckSelector.css';
 
 const DeckSelector = ({ onSelectDeck }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

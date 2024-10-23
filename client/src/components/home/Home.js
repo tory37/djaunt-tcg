@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/Home.css';
+import '../../styles/Home.css';
 
 const games = [
   { name: 'Digimon', path: '/digimon?view=full', logo: 'https://i.ytimg.com/vi/ghZYuIi5mu4/mqdefault.jpg' },

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import './styles/App.css';
-import Password from './components/Password';
-import Home from './components/Home';
-import Digimon from './components/Digimon';
-import AppWrapper from './components/AppWrapper';
+import Password from './components/auth/Password';
+import Home from './components/home/Home';
+import Decks from './components/deck/Decks';
 import { isLoggedIn, logout } from './services/auth';
+import Layout from './components/common/Layout';
+import CardCreator from './components/card/CardCreator';
 
 function App() {
   const [isLoggedInState, setIsLoggedInState] = useState(false);
@@ -25,12 +26,15 @@ function App() {
   return (
     <div className="App">
       {isLoggedInState ? (
-        <AppWrapper>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/digimon" element={<Digimon />} />
-          </Routes>
-        </AppWrapper>
+        <Layout>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/decks" element={<Decks />} />
+              <Route path="/cards" element={<CardCreator />} />
+              {/* Add the Cards route when the component is created */}
+              {/* <Route path="cards" element={<Cards />} /> */}
+            </Routes>
+        </Layout>
       ) : (
         <Password onLogin={handleLogin} />
       )}
