@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Papa from "papaparse";
 import axios from "axios";
 
-import "../styles/Digimon.css";
 import DeckSelector from "./DeckSelector";
 import DeckDisplay from "./DeckDisplay";
 

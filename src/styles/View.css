@@ -1,0 +1,13 @@
+/* View Specific Styles */
+.deck-display-container.full {
+  flex-direction: row;
+}
+
+.deck-display-container.mid {
+  flex-direction: row;
+}
+
+.deck-display-container.list {
+  flex-direction: column;
+}
+

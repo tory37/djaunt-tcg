@@ -8,6 +8,16 @@ import AppWrapper from "./components/AppWrapper";
 import { isLoggedIn, logout } from "./services/auth";
 import UnionArena from "./components/UnionArena";
 
+import "./styles/General.css";
+import "./styles/View.css";
+import "./styles/Card.css";
+import "./styles/ViewSelector.css";
+import "./styles/MidView.css";
+import "./styles/ListView.css";
+import "./styles/RandomImages.css";
+import "./styles/Button.css";
+import "./styles/Icons.css";
+
 function App() {
   const [isLoggedInState, setIsLoggedInState] = useState(false);
 

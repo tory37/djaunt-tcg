@@ -1,0 +1,40 @@
+/* Mid View Styles */
+.mid-card {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  width: 200px;
+}
+
+.mid-card-image {
+  width: 50px;
+  height: auto;
+  margin-right: 10px;
+}
+
+.mid-card-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.mid-card-name {
+  font-weight: bold;
+  margin-top: 10px;
+  text-align: left;
+}
+
+.mid-card-set {
+  font-size: 0.8em;
+  color: #dcdcdc;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.mid-card-count {
+  font-size: 0.8em;
+  color: #dcdcdc;
+  font-style: italic;
+  opacity: 0.7;
+}
+

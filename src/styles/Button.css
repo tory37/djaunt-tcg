@@ -1,0 +1,22 @@
+/* Button Styles */
+.draw-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #61dafb;
+  color: #282c34;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.draw-button:hover {
+  background-color: #21a1f1;
+  transform: scale(1.05);
+}
+
+.draw-button:focus {
+  outline: none;
+}
+

@@ -1,0 +1,14 @@
+/* Random Images Styles */
+.random-images {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.random-image {
+  width: 200px;
+  height: auto;
+  margin: 0 5px;
+}
+
