@@ -7,12 +7,15 @@ import {
   FaTrash,
   FaEye,
   FaSearch,
+  FaArrowUp,
+  FaArrowDown,
 } from "react-icons/fa"; // Import necessary icons
 import useImageModal from "../hooks/useImageModal";
 
 const EditView = ({ data, onSave, getImageUrl }) => {
   const [cards, setCards] = useState(data);
   const [viewMode, setViewMode] = useState({});
+  const [isDirty, setIsDirty] = useState(false); // Track if changes have been made
   const { selectedImage, handleImageClick, closeModal } = useImageModal();
   const [initialized, setInitialized] = useState(false);
 
@@ -26,6 +29,7 @@ const EditView = ({ data, onSave, getImageUrl }) => {
     }
 
     setCards(updatedCards);
+    setIsDirty(true); // Mark as dirty when a change is made
   };
 
   useEffect(() => {
@@ -42,11 +46,13 @@ const EditView = ({ data, onSave, getImageUrl }) => {
       ...cards,
       { Card: "", Number: "", Total: "", Have: "", Need: "" },
     ]);
+    setIsDirty(true); // Mark as dirty when a new card is added
   };
 
   const deleteCard = (index) => {
     const updatedCards = cards.filter((_, i) => i !== index);
     setCards(updatedCards);
+    setIsDirty(true); // Mark as dirty when a card is deleted
   };
 
   const openTCGPlayer = (cardName) => {
@@ -62,6 +68,21 @@ const EditView = ({ data, onSave, getImageUrl }) => {
     onSave(cards);
   };
 
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if (isDirty) {
+        event.preventDefault();
+        event.returnValue = ""; // Required for Chrome to show the warning dialog
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isDirty]);
+
   return (
     <div className="edit-view">
       {cards.map((card, index) => (
@@ -74,76 +95,16 @@ const EditView = ({ data, onSave, getImageUrl }) => {
                 className="card-preview"
                 onClick={() => handleImageClick(getImageUrl(card.Number))}
               />
-              <div className="card-stats-row">
-                <div className="card-stat">
-                  <FaPlus />
-                  <input
-                    type="number"
-                    value={card.Total}
-                    onChange={(e) =>
-                      handleInputChange(index, "Total", e.target.value)
-                    }
-                    placeholder="Total"
-                    autoFocus
-                  />
-                </div>
-                <div className="card-stat">
-                  <FaCheck />
-                  <input
-                    type="number"
-                    value={card.Have}
-                    onChange={(e) =>
-                      handleInputChange(index, "Have", e.target.value)
-                    }
-                    placeholder="Have"
-                    max={card.Total}
-                  />
-                </div>
-                <div className="card-stat">
-                  <FaMinus />
-                  <input
-                    type="number"
-                    value={card.Need}
-                    placeholder="Need"
-                    readOnly
-                  />
-                </div>
-              </div>
-              <div className="card-actions">
-                <button
-                  onClick={() => deleteCard(index)}
-                  className="icon-button"
-                >
-                  <FaTrash color="red" />
-                </button>
-                <button
-                  onClick={() =>
-                    setViewMode((prev) => ({
-                      ...prev,
-                      [index]: "inputs",
-                    }))
-                  }
-                  className="icon-button"
-                >
-                  <FaEye color="gold" />
-                </button>
-                <button
-                  onClick={() => openTCGPlayer(card.Card)}
-                  className="icon-button"
-                >
-                  <FaSearch color="green" />
-                </button>
-              </div>
             </>
           ) : (
-            <div className="card-edit-form-input-view">
+            <>
               <input
                 value={card.Card}
                 onChange={(e) =>
                   handleInputChange(index, "Card", e.target.value)
                 }
                 placeholder="Card Name"
-                style={{ marginTop: "100px", marginBottom: "10px" }}
+                style={{ marginBottom: "10px" }}
               />
               <input
                 type="string"
@@ -154,67 +115,110 @@ const EditView = ({ data, onSave, getImageUrl }) => {
                 placeholder="Card Number"
                 style={{ marginBottom: "10px" }}
               />
-              <div className="card-stats-row" style={{ marginBottom: "10px" }}>
-                <div className="card-stat">
-                  <FaPlus />
-                  <input
-                    type="number"
-                    value={card.Total}
-                    onChange={(e) =>
-                      handleInputChange(index, "Total", e.target.value)
-                    }
-                    placeholder="Total"
-                  />
-                </div>
-                <div className="card-stat">
-                  <FaCheck />
-                  <input
-                    type="number"
-                    value={card.Have}
-                    onChange={(e) =>
-                      handleInputChange(index, "Have", e.target.value)
-                    }
-                    placeholder="Have"
-                    max={card.Total}
-                  />
-                </div>
-                <div className="card-stat">
-                  <FaMinus />
-                  <input
-                    type="number"
-                    value={card.Need}
-                    placeholder="Need"
-                    readOnly
-                  />
-                </div>
-              </div>
-              <div className="card-actions" style={{ marginTop: "auto" }}>
-                <button
-                  onClick={() => deleteCard(index)}
-                  className="icon-button"
-                >
-                  <FaTrash color="red" />
-                </button>
-                <button
+            </>
+          )}
+          <div className="card-stats-row">
+            <div className="card-stat">
+              <FaPlus />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <FaArrowUp
+                  color="green"
                   onClick={() =>
-                    setViewMode((prev) => ({
-                      ...prev,
-                      [index]: "image",
-                    }))
+                    handleInputChange(index, "Total", card.Total + 1)
                   }
-                  className="icon-button"
-                >
-                  <FaEye color="gold" />
-                </button>
-                <button
-                  onClick={() => openTCGPlayer(card.Card)}
-                  className="icon-button"
-                >
-                  <FaSearch color="green" />
-                </button>
+                  style={{ cursor: "pointer" }}
+                />
+                <input
+                  type="number"
+                  value={card.Total}
+                  onChange={(e) =>
+                    handleInputChange(index, "Total", e.target.value)
+                  }
+                  placeholder="Total"
+                  style={{ textAlign: "center" }}
+                />
+                <FaArrowDown
+                  color="red"
+                  onClick={() =>
+                    handleInputChange(index, "Total", card.Total - 1)
+                  }
+                  style={{ cursor: "pointer" }}
+                />
               </div>
             </div>
-          )}
+            <div className="card-stat">
+              <FaCheck />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <FaArrowUp
+                  color="green"
+                  onClick={() =>
+                    handleInputChange(index, "Have", card.Have + 1)
+                  }
+                  style={{ cursor: "pointer" }}
+                />
+                <input
+                  type="number"
+                  value={card.Have}
+                  onChange={(e) =>
+                    handleInputChange(index, "Have", e.target.value)
+                  }
+                  placeholder="Have"
+                  max={card.Total}
+                  style={{ textAlign: "center" }}
+                />
+                <FaArrowDown
+                  color="red"
+                  onClick={() =>
+                    handleInputChange(index, "Have", card.Have - 1)
+                  }
+                  style={{ cursor: "pointer" }}
+                />
+              </div>
+            </div>
+            <div className="card-stat">
+              <FaMinus />
+              <input
+                type="number"
+                value={card.Need}
+                placeholder="Need"
+                readOnly
+              />
+            </div>
+          </div>
+          <div className="card-actions">
+            <button onClick={() => deleteCard(index)} className="icon-button">
+              <FaTrash color="red" />
+            </button>
+            <button
+              onClick={() =>
+                setViewMode((prev) => ({
+                  ...prev,
+                  [index]: "inputs",
+                }))
+              }
+              className="icon-button"
+            >
+              <FaEye color="gold" />
+            </button>
+            <button
+              onClick={() => openTCGPlayer(card.Card)}
+              className="icon-button"
+            >
+              <FaSearch color="green" />
+            </button>
+          </div>
         </div>
       ))}
       <button onClick={addCard}>Add Card</button>
