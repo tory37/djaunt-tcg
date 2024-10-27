@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import "../styles/EditView.css";
 
-const EditView = ({ data, onSave }) => {
+const EditView = ({ data, onSave, getImageUrl }) => {
   const [cards, setCards] = useState(data);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const handleInputChange = (index, field, value) => {
     const updatedCards = [...cards];
@@ -47,6 +49,14 @@ const EditView = ({ data, onSave }) => {
             onChange={(e) => handleInputChange(index, "Number", e.target.value)}
             placeholder="Card Number"
           />
+          {card.Number && (
+            <img
+              src={getImageUrl(card.Number)}
+              alt="Card Preview"
+              className="card-preview"
+              onClick={() => setSelectedImage(getImageUrl(card.Number))}
+            />
+          )}
           <input
             type="number"
             value={card.Total}
@@ -71,6 +81,12 @@ const EditView = ({ data, onSave }) => {
       ))}
       <button onClick={addCard}>Add Card</button>
       <button onClick={handleSave}>Save</button>
+
+      {selectedImage && (
+        <div className="image-modal" onClick={() => setSelectedImage(null)}>
+          <img src={selectedImage} alt="Full Screen Card" />
+        </div>
+      )}
     </div>
   );
 };

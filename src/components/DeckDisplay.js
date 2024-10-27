@@ -189,7 +189,11 @@ const DeckDisplay = ({
                     <CarouselView data={data} drawCount={drawCount} />
                   )}
                   {view === "edit" && (
-                    <EditView data={data} onSave={handleSave} />
+                    <EditView
+                      data={data}
+                      onSave={handleSave}
+                      getImageUrl={getImageUrl}
+                    />
                   )}
                 </div>
               </div>
