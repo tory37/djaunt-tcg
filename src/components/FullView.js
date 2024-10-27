@@ -1,6 +1,9 @@
 import React from "react";
+import useImageModal from "../hooks/useImageModal";
 
 const FullView = ({ data, handleCardClick }) => {
+  const { selectedImage, handleImageClick, closeModal } = useImageModal();
+
   return (
     <>
       {data.map((card, index) => {
@@ -15,11 +18,16 @@ const FullView = ({ data, handleCardClick }) => {
               src={card["Image"]}
               alt={card["Card"]}
               className="card-image"
-              onClick={handleCardClick(card)}
+              onClick={() => handleImageClick(card["Image"])}
             />
           </div>
         );
       })}
+      {selectedImage && (
+        <div className="image-modal" onClick={closeModal}>
+          <img src={selectedImage} alt="Full Screen Card" />
+        </div>
+      )}
     </>
   );
 };

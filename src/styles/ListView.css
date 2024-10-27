@@ -13,7 +13,7 @@
 .list-card-set,
 .list-card-set-number,
 .list-card-count {
-  width: 100px;
+  width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

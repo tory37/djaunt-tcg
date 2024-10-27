@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from "react";
 import "../styles/EditView.css";
-import { FaPlus, FaCheck, FaMinus } from "react-icons/fa"; // Import icons
+import {
+  FaPlus,
+  FaCheck,
+  FaMinus,
+  FaTrash,
+  FaEye,
+  FaSearch,
+} from "react-icons/fa"; // Import necessary icons
+import useImageModal from "../hooks/useImageModal";
 
 const EditView = ({ data, onSave, getImageUrl }) => {
   const [cards, setCards] = useState(data);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [viewMode, setViewMode] = useState({}); // Track view mode for each card
+  const [viewMode, setViewMode] = useState({});
+  const { selectedImage, handleImageClick, closeModal } = useImageModal();
+  const [initialized, setInitialized] = useState(false);
 
   const handleInputChange = (index, field, value) => {
     const updatedCards = [...cards];
     updatedCards[index][field] = value;
 
-    // Recalculate "Need" whenever "Have" or "Total" changes
     if (field === "Have" || field === "Total") {
       updatedCards[index]["Need"] =
         updatedCards[index]["Total"] - updatedCards[index]["Have"];
@@ -19,6 +27,15 @@ const EditView = ({ data, onSave, getImageUrl }) => {
 
     setCards(updatedCards);
   };
+
+  useEffect(() => {
+    if (cards.length > 0 && !initialized) {
+      cards.forEach((card, index) => {
+        setViewMode((prev) => ({ ...prev, [index]: "image" }));
+      });
+      setInitialized(true);
+    }
+  }, [cards]);
 
   const addCard = () => {
     setCards([
@@ -32,28 +49,18 @@ const EditView = ({ data, onSave, getImageUrl }) => {
     setCards(updatedCards);
   };
 
+  const openTCGPlayer = (cardName) => {
+    const baseUrl = "https://www.tcgplayer.com/search";
+    const productLine = "digimon-card-game"; // or "union-arena" based on your logic
+    const url = `${baseUrl}/${productLine}/product?productLineName=${productLine}&q=${encodeURIComponent(
+      cardName
+    )}&view=list`;
+    window.open(url, "_blank");
+  };
+
   const handleSave = () => {
     onSave(cards);
   };
-
-  const checkImageExists = (url, callback) => {
-    const img = new Image();
-    img.onload = () => callback(true);
-    img.onerror = () => callback(false);
-    img.src = url;
-  };
-
-  useEffect(() => {
-    cards.forEach((card, index) => {
-      const imageUrl = getImageUrl(card.Number);
-      checkImageExists(imageUrl, (exists) => {
-        setViewMode((prev) => ({
-          ...prev,
-          [index]: exists ? "image" : "inputs",
-        }));
-      });
-    });
-  }, [cards]);
 
   return (
     <div className="edit-view">
@@ -65,7 +72,7 @@ const EditView = ({ data, onSave, getImageUrl }) => {
                 src={getImageUrl(card.Number)}
                 alt="Card Preview"
                 className="card-preview"
-                onClick={() => setSelectedImage(getImageUrl(card.Number))}
+                onClick={() => handleImageClick(getImageUrl(card.Number))}
               />
               <div className="card-stats-row">
                 <div className="card-stat">
@@ -102,25 +109,41 @@ const EditView = ({ data, onSave, getImageUrl }) => {
                   />
                 </div>
               </div>
-              <button
-                onClick={() =>
-                  setViewMode((prev) => ({
-                    ...prev,
-                    [index]: "inputs",
-                  }))
-                }
-              >
-                Toggle View
-              </button>
+              <div className="card-actions">
+                <button
+                  onClick={() => deleteCard(index)}
+                  className="icon-button"
+                >
+                  <FaTrash color="red" />
+                </button>
+                <button
+                  onClick={() =>
+                    setViewMode((prev) => ({
+                      ...prev,
+                      [index]: "inputs",
+                    }))
+                  }
+                  className="icon-button"
+                >
+                  <FaEye color="gold" />
+                </button>
+                <button
+                  onClick={() => openTCGPlayer(card.Card)}
+                  className="icon-button"
+                >
+                  <FaSearch color="green" />
+                </button>
+              </div>
             </>
           ) : (
-            <>
+            <div className="card-edit-form-input-view">
               <input
                 value={card.Card}
                 onChange={(e) =>
                   handleInputChange(index, "Card", e.target.value)
                 }
                 placeholder="Card Name"
+                style={{ marginTop: "100px", marginBottom: "10px" }}
               />
               <input
                 type="string"
@@ -129,8 +152,9 @@ const EditView = ({ data, onSave, getImageUrl }) => {
                   handleInputChange(index, "Number", e.target.value)
                 }
                 placeholder="Card Number"
+                style={{ marginBottom: "10px" }}
               />
-              <div className="card-stats-row">
+              <div className="card-stats-row" style={{ marginBottom: "10px" }}>
                 <div className="card-stat">
                   <FaPlus />
                   <input
@@ -164,26 +188,40 @@ const EditView = ({ data, onSave, getImageUrl }) => {
                   />
                 </div>
               </div>
-              <button
-                onClick={() =>
-                  setViewMode((prev) => ({
-                    ...prev,
-                    [index]: "image",
-                  }))
-                }
-              >
-                Toggle View
-              </button>
-            </>
+              <div className="card-actions" style={{ marginTop: "auto" }}>
+                <button
+                  onClick={() => deleteCard(index)}
+                  className="icon-button"
+                >
+                  <FaTrash color="red" />
+                </button>
+                <button
+                  onClick={() =>
+                    setViewMode((prev) => ({
+                      ...prev,
+                      [index]: "image",
+                    }))
+                  }
+                  className="icon-button"
+                >
+                  <FaEye color="gold" />
+                </button>
+                <button
+                  onClick={() => openTCGPlayer(card.Card)}
+                  className="icon-button"
+                >
+                  <FaSearch color="green" />
+                </button>
+              </div>
+            </div>
           )}
-          <button onClick={() => deleteCard(index)}>Delete</button>
         </div>
       ))}
       <button onClick={addCard}>Add Card</button>
       <button onClick={handleSave}>Save</button>
 
       {selectedImage && (
-        <div className="image-modal" onClick={() => setSelectedImage(null)}>
+        <div className="image-modal" onClick={closeModal}>
           <img src={selectedImage} alt="Full Screen Card" />
         </div>
       )}

@@ -90,7 +90,7 @@ const Carousel = ({ images, vertical = false }) => {
         ))}
       </div>
       <div className={`right-edge ${vertical ? "vertical" : ""}`} />
-      <div className={`center-card ${vertical ? "vertical" : ""}`}>
+      {/* <div className={`center-card ${vertical ? "vertical" : ""}`}>
         <img
           src={images[centerIndex]}
           alt={`Center Card ${centerIndex}`}
@@ -108,7 +108,7 @@ const Carousel = ({ images, vertical = false }) => {
         onClick={() => handleScroll(vertical ? 1 : -1)}
       >
         &#9650;
-      </div>
+      </div> */}
     </div>
   );
 };

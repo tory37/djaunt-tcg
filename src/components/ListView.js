@@ -4,28 +4,24 @@ const ListView = ({ data }) => {
   return (
     <>
       {data.map((card, index) => {
-        const inDeckCount = parseInt(card["Total"], 10) || 0;
-        const setNameParts = card["Number"]
-          ? card["Number"].split("-")
-          : ["", ""];
-        const firstPart = setNameParts[0];
-        const secondPart = setNameParts[1] ? `${setNameParts[1]}` : "";
+        const totalCount = parseInt(card["Total"], 10) || 0;
+        const haveCount = parseInt(card["Have"], 10) || 0;
+        const needCount = parseInt(card["Need"], 10) || 0;
 
         return (
           <div className="list-card" key={index}>
             <div className="list-card-name">{card["Card"]}</div>
             <div className="vertical-line"></div>
             <div className="list-card-set">
-              <span className="set-label">Set:</span> {firstPart}
+              <span className="set-label">Set:</span> {card["Number"]}
             </div>
             <div className="vertical-line"></div>
             <div className="list-card-set-number">
-              <span className="set-number-label">#:</span> {secondPart}
+              <span className="set-number-label">Total:</span> {totalCount}
             </div>
             <div className="vertical-line"></div>
             <div className="list-card-count">
-              <span className="have-label">Have:</span> {card["Have"]} /{" "}
-              <span className="in-deck-label">{inDeckCount}</span>
+              <span className="have-label">Have:</span> {haveCount}
             </div>
           </div>
         );

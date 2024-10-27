@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Carousel from "./Carousel";
+import useImageModal from "../hooks/useImageModal";
 
 const CarouselView = ({ data, drawCount = 5 }) => {
   const [drawnImages, setDrawnImages] = useState([]);
+  const { selectedImage, handleImageClick, closeModal } = useImageModal();
 
   const handleDraw = () => {
     const randomImages = [];
@@ -40,12 +42,18 @@ const CarouselView = ({ data, drawCount = 5 }) => {
             src={image}
             alt={`Random ${index}`}
             className="random-image"
+            onClick={() => handleImageClick(image)}
           />
         ))}
       </div>
       <button className="draw-button" onClick={handleDraw}>
         Draw
       </button>
+      {selectedImage && (
+        <div className="image-modal" onClick={closeModal}>
+          <img src={selectedImage} alt="Full Screen Card" />
+        </div>
+      )}
     </>
   );
 };
