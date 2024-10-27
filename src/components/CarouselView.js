@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Carousel from "./Carousel";
 
-const CarouselView = ({ data }) => {
+const CarouselView = ({ data, drawCount = 5 }) => {
   const [drawnImages, setDrawnImages] = useState([]);
 
   const handleDraw = () => {
     const randomImages = [];
     const availableImages = getSpreadDeck().map((card) => card["Image"]);
 
-    while (randomImages.length < 5) {
+    while (randomImages.length < drawCount) {
       const randomIndex = Math.floor(Math.random() * availableImages.length);
       const randomImage = availableImages[randomIndex];
       if (!randomImages.includes(randomImage)) {

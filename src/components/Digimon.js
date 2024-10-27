@@ -75,6 +75,7 @@ const Digimon = () => {
           sheetsId={DIGIMON_SHEETS_ID}
           getImageUrl={getImageUrl}
           deckImage={selectedDeck.Image}
+          drawCount={5}
         />
       )}
     </>

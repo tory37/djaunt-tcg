@@ -14,6 +14,7 @@ const DeckDisplay = ({
   sheetsId,
   getImageUrl,
   deckImage,
+  drawCount = 5,
 }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -128,7 +129,9 @@ const DeckDisplay = ({
               )}
               {view === "mid" && <MidView data={data} />}
               {view === "list" && <ListView data={data} />}
-              {view === "carousel" && <CarouselView data={data} />}
+              {view === "carousel" && (
+                <CarouselView data={data} drawCount={drawCount} />
+              )}
             </div>
           </div>
         </>

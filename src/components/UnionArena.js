@@ -59,6 +59,7 @@ const UnionArena = () => {
           sheetsId={UNION_ARENA_SHEETS_ID}
           getImageUrl={getImageUrl}
           deckImage={selectedDeck.Image}
+          drawCount={7}
         />
       )}
     </>
