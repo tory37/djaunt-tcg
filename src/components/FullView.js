@@ -7,9 +7,9 @@ const FullView = ({ data, handleCardClick }) => {
         const inDeckCount = parseInt(card["Total"], 10) || 0;
 
         return (
-          <div className="card" key={index}>
-            <div className="in-deck-count">{inDeckCount}</div>{" "}
-            {/* Add this line */}
+          <div className="card" key={index} style={{ position: "relative" }}>
+            {card["Shared"] && <div className="icon-top-right">🔗</div>}
+            <div className="in-deck-count">{inDeckCount}</div>
             <img
               key={`${card["Card"]}-${card["Number"]}`}
               src={card["Image"]}

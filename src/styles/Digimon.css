@@ -55,14 +55,15 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  width: 150px;
+  width: 200px;
   height: auto;
   margin: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s; /* Add this line for smooth transition */
 }
 
 .card:hover {
-  transform: scale(2);
+  transform: scale(1.35);
   z-index: 100; 
 }
 
@@ -291,7 +292,7 @@
   right: 10px; /* Position at the right */
   width: 30px; /* Increased size for prominence */
   height: 30px; /* Increased size for prominence */
-  background-color: #8B4513; /* Earthy brown color */
+  background-color: gray; /* Earthy brown color */
   color: white;
   border-radius: 15px; /* Perfect circle */
   display: flex;
@@ -301,9 +302,17 @@
   font-weight: bold; /* Modern bold font */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Enhanced shadow for more depth */
   transition: transform 0.2s, background-color 0.3s; /* Smooth transitions */
+  border: 5px solid black;
 }
 
-.in-deck-count:hover {
-  transform: scale(1.15); /* More pronounced enlargement on hover */
-  background-color: #A0522D; /* Darker earthy shade on hover */
+.icon-top-right {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 1.5em; /* Increase the size of the icon */
+  color: #ff0000; /* Change the color to red */
+  background-color: rgba(255, 255, 255, 0.8); /* Add a semi-transparent background */
+  border-radius: 50%; /* Make the background circular */
+  padding: 5px; /* Add some padding */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
 }
