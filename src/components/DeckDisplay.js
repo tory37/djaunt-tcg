@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import Papa from "papaparse";
-import axios from "axios";
+import {
+  readFromSheet,
+  writeToSheet,
+  initGoogleServices,
+  isSignedIn,
+  signIn,
+  signOut,
+} from "../services/googleSheetsService";
 
 import FullView from "./FullView";
 import MidView from "./MidView";
 import ListView from "./ListView";
 import CarouselView from "./CarouselView";
+import EditView from "./EditView";
 
 const DeckDisplay = ({
   deckName,
@@ -20,13 +27,12 @@ const DeckDisplay = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [view, setView] = useState("full");
+  const [editMode, setEditMode] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
-
-  const isResponseFieldValid = (value) => {
-    return value !== undefined && value !== null && value !== "";
-  };
 
   const handleViewChange = (newView) => {
     setView(newView);
@@ -34,40 +40,38 @@ const DeckDisplay = ({
   };
 
   useEffect(() => {
-    const fetchDeck = async () => {
+    const init = async () => {
       try {
-        const URL = `https://docs.google.com/spreadsheets/d/${sheetsId}/pub?gid=${deckId}&single=true&output=csv`;
-        const response = await axios.get(URL);
-        console.log("Deck fetched successfully:", response.data);
+        const initialized = await initGoogleServices();
+        setIsInitialized(initialized);
+        if (initialized) {
+          setIsAuthenticated(isSignedIn());
+        }
+      } catch (error) {
+        console.error("Error initializing Google services:", error);
+        setError("Error initializing Google services");
+      }
+    };
+    init();
+  }, [isInitialized]);
 
-        Papa.parse(response.data, {
-          header: true,
-          complete: async (results) => {
-            console.log("CSV parsing complete. Parsed data:", results.data);
-
-            const filteredData = results.data
-              .filter(
-                (card) =>
-                  isResponseFieldValid(card["Card"]) &&
-                  isResponseFieldValid(card["Number"]) &&
-                  isResponseFieldValid(card["Total"]) &&
-                  isResponseFieldValid(card["Have"]) &&
-                  isResponseFieldValid(card["Need"])
-              )
-              ?.map((card) => ({
-                ...card,
-                Image: getImageUrl(card["Number"]),
-              }));
-
-            setData(filteredData);
-            setLoading(false);
-          },
-          error: (err) => {
-            console.error("Error parsing CSV data:", err);
-            setError("Error parsing CSV data");
-            setLoading(false);
-          },
+  useEffect(() => {
+    const fetchDeck = async () => {
+      if (!isInitialized) return;
+      try {
+        setLoading(true);
+        const values = await readFromSheet(sheetsId, `${deckName}!A:F`);
+        const headers = values[0];
+        const data = values.slice(1).map((row) => {
+          const card = {};
+          headers.forEach((header, index) => {
+            card[header] = row[index];
+          });
+          card.Image = getImageUrl(card.Number);
+          return card;
         });
+        setData(data);
+        setLoading(false);
       } catch (err) {
         console.error("Error fetching data:", err);
         setError("Error fetching data");
@@ -75,10 +79,10 @@ const DeckDisplay = ({
       }
     };
 
-    if (deckId && sheetsId && getImageUrl) {
+    if (isInitialized && isAuthenticated && deckId && sheetsId && getImageUrl) {
       fetchDeck();
     }
-  }, [deckId, sheetsId, getImageUrl]);
+  }, [deckId, sheetsId, getImageUrl, isInitialized, isAuthenticated]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -89,51 +93,108 @@ const DeckDisplay = ({
     }
   }, [location]);
 
+  const handleSave = async (updatedData) => {
+    try {
+      setLoading(true);
+      const headers = ["Card", "Number", "Total", "Have", "Need"];
+      const values = [
+        headers,
+        ...updatedData.map((card) => headers.map((header) => card[header])),
+      ];
+      await writeToSheet(sheetsId, `${deckName}!A:F`, values);
+      setData(updatedData);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error saving data:", error);
+      setError("Error saving data");
+      setLoading(false);
+    }
+  };
+
+  const handleSignIn = async () => {
+    if (!isInitialized) {
+      setError("Google services not initialized yet. Please try again.");
+      return;
+    }
+    try {
+      await signIn();
+      setIsAuthenticated(true);
+    } catch (error) {
+      console.error("Error signing in:", error);
+      setError("Error signing in. Please try again.");
+    }
+  };
+
+  const handleSignOut = () => {
+    signOut();
+    setIsAuthenticated(false);
+  };
+
+  if (!isInitialized) {
+    return <div>Initializing Google services...</div>;
+  }
+
   return (
     <>
       <h1>{deckName}</h1>
-      {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
-      {!loading && !error && (
+      {!isAuthenticated ? (
+        <button onClick={handleSignIn}>Sign In with Google</button>
+      ) : (
         <>
-          <div className="view-selector">
-            <button
-              onClick={() => handleViewChange("full")}
-              className={view === "full" ? "active" : ""}
-            >
-              Full
-            </button>
-            <button
-              onClick={() => handleViewChange("mid")}
-              className={view === "mid" ? "active" : ""}
-            >
-              Mid
-            </button>
-            <button
-              onClick={() => handleViewChange("list")}
-              className={view === "list" ? "active" : ""}
-            >
-              List
-            </button>
-            <button
-              onClick={() => handleViewChange("carousel")}
-              className={view === "carousel" ? "active" : ""}
-            >
-              Carousel
-            </button>
-          </div>
-          <div className={`digimon-container`}>
-            <div className={`deck-display-container ${view}`}>
-              {view === "full" && (
-                <FullView data={data} handleCardClick={() => {}} />
-              )}
-              {view === "mid" && <MidView data={data} />}
-              {view === "list" && <ListView data={data} />}
-              {view === "carousel" && (
-                <CarouselView data={data} drawCount={drawCount} />
-              )}
-            </div>
-          </div>
+          <button onClick={handleSignOut}>Sign Out</button>
+          {loading && <p>Loading...</p>}
+          {error && <p>{error}</p>}
+          {!loading && !error && (
+            <>
+              <div className="view-selector">
+                <button
+                  onClick={() => handleViewChange("full")}
+                  className={view === "full" ? "active" : ""}
+                >
+                  Full
+                </button>
+                <button
+                  onClick={() => handleViewChange("mid")}
+                  className={view === "mid" ? "active" : ""}
+                >
+                  Mid
+                </button>
+                <button
+                  onClick={() => handleViewChange("list")}
+                  className={view === "list" ? "active" : ""}
+                >
+                  List
+                </button>
+                <button
+                  onClick={() => handleViewChange("carousel")}
+                  className={view === "carousel" ? "active" : ""}
+                >
+                  Carousel
+                </button>
+                <button
+                  onClick={() => handleViewChange("edit")}
+                  className={view === "edit" ? "active" : ""}
+                >
+                  Edit
+                </button>
+              </div>
+              <div className={`digimon-container`}>
+                <div className={`deck-display-container ${view}`}>
+                  {view === "full" && (
+                    <FullView data={data} handleCardClick={() => {}} />
+                  )}
+                  {view === "mid" && <MidView data={data} />}
+                  {view === "list" && <ListView data={data} />}
+                  {view === "carousel" && (
+                    <CarouselView data={data} drawCount={drawCount} />
+                  )}
+                  {view === "edit" && (
+                    <EditView data={data} onSave={handleSave} />
+                  )}
+                </div>
+              </div>
+            </>
+          )}
         </>
       )}
     </>
