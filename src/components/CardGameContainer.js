@@ -1,34 +1,51 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Papa from "papaparse";
 import axios from "axios";
-
+import { useLocation, useNavigate } from "react-router";
 import DeckSelector from "./DeckSelector";
 import DeckDisplay from "./DeckDisplay";
-import { useLocation, useNavigate } from "react-router";
 
-const DIGIMON_SHEETS_ID = "1OUe7UXkv4thBKIpJu0E3d7fCVj3qUwxBuAZxKJ45nFk";
-const DIGIMON_MASTER_SHEET_ID = "1592992967";
-
-const Digimon = () => {
+const CardGameContainer = ({
+  sheetsId,
+  directorySheetId,
+  route,
+  getImageUrl,
+  isAuthenticated,
+}) => {
   const [masterList, setMasterList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedDeck, setSelectedDeck] = useState(null);
 
   const location = useLocation();
   const navigate = useNavigate();
+  const prevSheetsId = useRef(sheetsId);
+  const prevDirectorySheetId = useRef(directorySheetId);
+
+  // Load saved state from localStorage
+  useEffect(() => {
+    const savedDeck = localStorage.getItem("selectedDeck");
+    if (savedDeck) {
+      setSelectedDeck(JSON.parse(savedDeck));
+    }
+  }, []);
 
   const handleSelectDeck = (deck) => {
     setSelectedDeck(deck);
-  };
-
-  const getImageUrl = (cardNumber) => {
-    return `https://images.digimoncard.io/images/cards/${cardNumber}.jpg`;
+    // Save selected deck to localStorage
+    localStorage.setItem("selectedDeck", JSON.stringify(deck));
   };
 
   useEffect(() => {
+    if (
+      prevSheetsId.current === sheetsId &&
+      prevDirectorySheetId.current === directorySheetId
+    ) {
+      return;
+    }
+
     const fetchMasterList = async () => {
       try {
-        const url = `https://docs.google.com/spreadsheets/d/${DIGIMON_SHEETS_ID}/pub?gid=${DIGIMON_MASTER_SHEET_ID}&single=true&output=csv`;
+        const url = `https://docs.google.com/spreadsheets/d/${sheetsId}/pub?gid=${directorySheetId}&single=true&output=csv`;
         const response = await axios.get(url);
         console.log("Master List fetched successfully:", response.data);
 
@@ -47,7 +64,7 @@ const Digimon = () => {
               );
               setSelectedDeck(deckFromParams);
             } else {
-              navigate("/digimon");
+              navigate(`/${route}`);
             }
           },
           error: (err) => {
@@ -62,23 +79,28 @@ const Digimon = () => {
     };
 
     fetchMasterList();
-  }, []);
+
+    prevSheetsId.current = sheetsId;
+    prevDirectorySheetId.current = directorySheetId;
+  }, [sheetsId, directorySheetId, location, navigate]);
 
   return (
     <>
+      {loading && <div className="loading-overlay">Loading...</div>}
       <DeckSelector onSelectDeck={handleSelectDeck} decks={masterList} />
       {selectedDeck && (
         <DeckDisplay
           deckName={selectedDeck.Name}
           deckId={selectedDeck.Id}
-          sheetsId={DIGIMON_SHEETS_ID}
+          sheetsId={sheetsId}
           getImageUrl={getImageUrl}
           deckImage={selectedDeck.Image}
           drawCount={5}
+          isAuthenticated={isAuthenticated}
         />
       )}
     </>
   );
 };
 
-export default Digimon;
+export default CardGameContainer;

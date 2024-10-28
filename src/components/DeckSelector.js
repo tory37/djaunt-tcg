@@ -2,33 +2,24 @@ import React, { useState } from "react";
 import "../styles/DeckSelector.css";
 
 const DeckSelector = ({ decks, onSelectDeck }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeDeck, setActiveDeck] = useState(null);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+  const handleDeckClick = (deck) => {
+    setActiveDeck(deck.Name);
+    onSelectDeck(deck);
   };
 
   return (
-    <div className="deck-selector">
-      <button onClick={toggleMenu} className="deck-selector-button">
-        {isMenuOpen ? "Hide Decks" : "Select a Deck"}
-      </button>
-      {isMenuOpen && (
-        <div>
-          {decks.map((deck) => (
-            <div
-              key={deck.Name}
-              className="deck-selector-dropdown-item"
-              onClick={() => {
-                onSelectDeck(deck);
-                setIsMenuOpen(false);
-              }}
-            >
-              {deck.Name}
-            </div>
-          ))}
-        </div>
-      )}
+    <div className="deck-selector-grid">
+      {decks.map((deck) => (
+        <button
+          key={deck.Name}
+          className={`deck-button ${activeDeck === deck.Name ? "active" : ""}`}
+          onClick={() => handleDeckClick(deck)}
+        >
+          {deck.Name}
+        </button>
+      ))}
     </div>
   );
 };

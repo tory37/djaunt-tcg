@@ -42,3 +42,30 @@
   background-color: #0f0f1a;
   /* Highlight on hover */
 }
+
+.deck-selector-grid {
+  gap: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.deck-button {
+  padding: 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.deck-button.active {
+  background-color: #007bff;
+  color: white;
+  transform: translateY(2px);
+}
+
+.deck-button:hover {
+  background-color: #e0e0e0;
+}

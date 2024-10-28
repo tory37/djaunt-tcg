@@ -99,7 +99,10 @@ export const readFromSheet = async (spreadsheetId, range) => {
     });
     return response.result.values;
   } catch (error) {
-    console.error("Error reading from Google Sheet:", error);
+    console.error(
+      `Error reading from Google Sheet (${spreadsheetId}, ${range}):`,
+      error
+    );
     throw error;
   }
 };

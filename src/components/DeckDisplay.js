@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import {
-  readFromSheet,
-  writeToSheet,
-  initGoogleServices,
-  isSignedIn,
-  signIn,
-  signOut,
-} from "../services/googleSheetsService";
+import { readFromSheet, writeToSheet } from "../services/googleSheetsService";
 
 import FullView from "./FullView";
 import MidView from "./MidView";
@@ -22,14 +15,14 @@ const DeckDisplay = ({
   getImageUrl,
   deckImage,
   drawCount = 5,
+  isAuthenticated,
+  handleSignOut,
 }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [view, setView] = useState("full");
   const [editMode, setEditMode] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isInitialized, setIsInitialized] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,25 +33,10 @@ const DeckDisplay = ({
   };
 
   useEffect(() => {
-    const init = async () => {
-      try {
-        const initialized = await initGoogleServices();
-        setIsInitialized(initialized);
-        if (initialized) {
-          setIsAuthenticated(isSignedIn());
-        }
-      } catch (error) {
-        console.error("Error initializing Google services:", error);
-        setError("Error initializing Google services");
-      }
-    };
-    init();
-  }, [isInitialized]);
-
-  useEffect(() => {
     const fetchDeck = async () => {
-      if (!isInitialized) return;
+      if (!isAuthenticated) return;
       try {
+        setError(null);
         setLoading(true);
         const values = await readFromSheet(sheetsId, `${deckName}!A:F`);
         const headers = values[0];
@@ -79,10 +57,10 @@ const DeckDisplay = ({
       }
     };
 
-    if (isInitialized && isAuthenticated && deckId && sheetsId && getImageUrl) {
+    if (isAuthenticated && deckId && sheetsId && getImageUrl && deckName) {
       fetchDeck();
     }
-  }, [deckId, sheetsId, getImageUrl, isInitialized, isAuthenticated]);
+  }, [deckId, sheetsId, getImageUrl, isAuthenticated, deckName]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -111,94 +89,69 @@ const DeckDisplay = ({
     }
   };
 
-  const handleSignIn = async () => {
-    if (!isInitialized) {
-      setError("Google services not initialized yet. Please try again.");
-      return;
-    }
-    try {
-      await signIn();
-      setIsAuthenticated(true);
-    } catch (error) {
-      console.error("Error signing in:", error);
-      setError("Error signing in. Please try again.");
-    }
-  };
-
-  const handleSignOut = () => {
-    signOut();
-    setIsAuthenticated(false);
-  };
-
-  if (!isInitialized) {
-    return <div>Initializing Google services...</div>;
+  if (!isAuthenticated) {
+    return <div>Please sign in to view the deck.</div>;
   }
 
   return (
     <>
       <h1>{deckName}</h1>
-      {!isAuthenticated ? (
-        <button onClick={handleSignIn}>Sign In with Google</button>
-      ) : (
+      <button onClick={handleSignOut}>Sign Out</button>
+      {loading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
+      {!loading && !error && (
         <>
-          <button onClick={handleSignOut}>Sign Out</button>
-          {loading && <p>Loading...</p>}
-          {error && <p>{error}</p>}
-          {!loading && !error && (
-            <>
-              <div className="view-selector">
-                <button
-                  onClick={() => handleViewChange("full")}
-                  className={view === "full" ? "active" : ""}
-                >
-                  Full
-                </button>
-                <button
-                  onClick={() => handleViewChange("mid")}
-                  className={view === "mid" ? "active" : ""}
-                >
-                  Mid
-                </button>
-                <button
-                  onClick={() => handleViewChange("list")}
-                  className={view === "list" ? "active" : ""}
-                >
-                  List
-                </button>
-                <button
-                  onClick={() => handleViewChange("carousel")}
-                  className={view === "carousel" ? "active" : ""}
-                >
-                  Carousel
-                </button>
-                <button
-                  onClick={() => handleViewChange("edit")}
-                  className={view === "edit" ? "active" : ""}
-                >
-                  Edit
-                </button>
-              </div>
-              <div className={`digimon-container`}>
-                <div className={`deck-display-container ${view}`}>
-                  {view === "full" && (
-                    <FullView data={data} handleCardClick={() => {}} />
-                  )}
-                  {view === "mid" && <MidView data={data} />}
-                  {view === "list" && <ListView data={data} />}
-                  {view === "carousel" && (
-                    <CarouselView data={data} drawCount={drawCount} />
-                  )}
-                  {view === "edit" && (
-                    <EditView
-                      data={data}
-                      onSave={handleSave}
-                      getImageUrl={getImageUrl}
-                    />
-                  )}
-                </div>
-              </div>
-            </>
-          )}
+          <div className="view-selector">
+            <button
+              onClick={() => handleViewChange("full")}
+              className={view === "full" ? "active" : ""}
+            >
+              Full
+            </button>
+            <button
+              onClick={() => handleViewChange("mid")}
+              className={view === "mid" ? "active" : ""}
+            >
+              Mid
+            </button>
+            <button
+              onClick={() => handleViewChange("list")}
+              className={view === "list" ? "active" : ""}
+            >
+              List
+            </button>
+            <button
+              onClick={() => handleViewChange("carousel")}
+              className={view === "carousel" ? "active" : ""}
+            >
+              Carousel
+            </button>
+            <button
+              onClick={() => handleViewChange("edit")}
+              className={view === "edit" ? "active" : ""}
+            >
+              Edit
+            </button>
+          </div>
+          <div className={`digimon-container`}>
+            <div className={`deck-display-container ${view}`}>
+              {view === "full" && (
+                <FullView data={data} handleCardClick={() => {}} />
+              )}
+              {view === "mid" && <MidView data={data} />}
+              {view === "list" && <ListView data={data} />}
+              {view === "carousel" && (
+                <CarouselView data={data} drawCount={drawCount} />
+              )}
+              {view === "edit" && (
+                <EditView
+                  data={data}
+                  onSave={handleSave}
+                  getImageUrl={getImageUrl}
+                />
+              )}
+            </div>
+          </div>
         </>
       )}
     </>
