@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { readFromSheet, writeToSheet } from "../services/googleSheetsService";
+import { writeToSheet } from "../services/googleSheetsService";
 
 import FullView from "./FullView";
 import MidView from "./MidView";
@@ -15,14 +15,11 @@ const DeckDisplay = ({
   getImageUrl,
   deckImage,
   drawCount = 5,
-  isAuthenticated,
-  handleSignOut,
+  data,
 }) => {
-  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [view, setView] = useState("full");
-  const [editMode, setEditMode] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,36 +28,6 @@ const DeckDisplay = ({
     setView(newView);
     navigate(`?view=${newView}&deckId=${deckId}`);
   };
-
-  useEffect(() => {
-    const fetchDeck = async () => {
-      if (!isAuthenticated) return;
-      try {
-        setError(null);
-        setLoading(true);
-        const values = await readFromSheet(sheetsId, `${deckName}!A:F`);
-        const headers = values[0];
-        const data = values.slice(1).map((row) => {
-          const card = {};
-          headers.forEach((header, index) => {
-            card[header] = row[index];
-          });
-          card.Image = getImageUrl(card.Number);
-          return card;
-        });
-        setData(data);
-        setLoading(false);
-      } catch (err) {
-        console.error("Error fetching data:", err);
-        setError("Error fetching data");
-        setLoading(false);
-      }
-    };
-
-    if (isAuthenticated && deckId && sheetsId && getImageUrl && deckName) {
-      fetchDeck();
-    }
-  }, [deckId, sheetsId, getImageUrl, isAuthenticated, deckName]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -80,7 +47,6 @@ const DeckDisplay = ({
         ...updatedData.map((card) => headers.map((header) => card[header])),
       ];
       await writeToSheet(sheetsId, `${deckName}!A:F`, values);
-      setData(updatedData);
       setLoading(false);
     } catch (error) {
       console.error("Error saving data:", error);
@@ -89,14 +55,9 @@ const DeckDisplay = ({
     }
   };
 
-  if (!isAuthenticated) {
-    return <div>Please sign in to view the deck.</div>;
-  }
-
   return (
     <>
       <h1>{deckName}</h1>
-      <button onClick={handleSignOut}>Sign Out</button>
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
       {!loading && !error && (

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../styles/DeckSelector.css";
 
-const DeckSelector = ({ decks, onSelectDeck }) => {
+const DeckSelector = ({ decks, onSelectDeck, onImportDeck }) => {
   const [activeDeck, setActiveDeck] = useState(null);
 
   const handleDeckClick = (deck) => {
@@ -20,6 +20,9 @@ const DeckSelector = ({ decks, onSelectDeck }) => {
           {deck.Name}
         </button>
       ))}
+      <button className="import-deck-button" onClick={onImportDeck}>
+        Import Deck
+      </button>
     </div>
   );
 };
