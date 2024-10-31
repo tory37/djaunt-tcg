@@ -1,21 +1,45 @@
-import React from "react";
-import { Navigate } from "react-router-dom";
-import { useGoogleOAuth } from "@react-oauth/google";
+import React, { useState, useEffect } from "react";
+import { GoogleLogin } from "@react-oauth/google";
+import { checkTokenValidity } from "../services/googleAuth"; // Adjust the import path as necessary
 
-const ProtectedRoute = ({ children, login }) => {
-  const token = localStorage.getItem("access_token"); // Check for token in localStorage
+const ProtectedRoute = ({ children }) => {
+  const [token, setToken] = useState(sessionStorage.getItem("access_token"));
 
-  // If user is not authenticated, render the login form
+  const onSuccess = (credentialResponse) => {
+    const accessToken = credentialResponse.credential;
+    console.log("Credential Response:", credentialResponse);
+    sessionStorage.setItem("access_token", accessToken);
+    setToken(accessToken);
+    console.log("Sign-in successful");
+  };
+
+  const onError = (error) => {
+    console.log(error);
+  };
+
+  useEffect(() => {
+    const validateToken = async () => {
+      if (token) {
+        const isValid = await checkTokenValidity(token);
+        if (!isValid) {
+          // Handle invalid token (e.g., log out the user)
+          sessionStorage.removeItem("access_token");
+          setToken(null);
+        }
+      }
+    };
+    validateToken();
+  }, [token]);
+
   if (!token) {
     return (
       <div>
         <h2>Please log in to access this content.</h2>
-        <button onClick={login}>Sign in with Google 🚀</button>
+        <GoogleLogin onSuccess={onSuccess} onError={onError} />
       </div>
     );
   }
 
-  // If user is authenticated, render the children (the protected route)
   return children;
 };
 

@@ -6,6 +6,7 @@
   "proxy": "https://digimoncard.io",
   "dependencies": {
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+    "@googleapis/sheets": "^9.3.1",
     "@react-oauth/google": "^0.12.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",

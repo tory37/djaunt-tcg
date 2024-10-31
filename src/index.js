@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { HashRouter } from "react-router-dom";
-import { GoogleOAuthProvider, googleLogout } from "@react-oauth/google";
+// import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
@@ -12,13 +12,13 @@ console.log("Google Client ID:", CLIENT_ID); // Log the client ID to check if it
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <HashRouter>
-      <GoogleOAuthProvider clientId={CLIENT_ID}>
-        <App />
-      </GoogleOAuthProvider>
-    </HashRouter>
-  </React.StrictMode>
+  // <GoogleOAuthProvider clientId={CLIENT_ID}>
+  //   <React.StrictMode>
+  <HashRouter>
+    <App />
+  </HashRouter>
+  //   </React.StrictMode>
+  // </GoogleOAuthProvider>
 );
 
 reportWebVitals();
